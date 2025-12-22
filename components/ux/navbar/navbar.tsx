@@ -2,36 +2,22 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { Menu, X, User, Stethoscope } from "lucide-react";
+import { Menu, X, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "./ModeToggle";
-
-const navLinks = [
-  { name: "Home", href: "/" },
-  { name: "About Us", href: "/about" },
-  { name: "Services", href: "/services" },
-  { name: "Doctors", href: "/doctors" },
-  { name: "Contact", href: "/contact" },
-];
+import Logo from "../components/logo";
+import { navLinks } from "./navLink";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = React.useState(false);
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur-md">
-      <div className="container mx-auto px-4 md:px-6">
+      <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-              <Stethoscope className="h-5 w-5" />
-            </div>
-            <span className="text-xl font-bold tracking-tight text-primary">
-              MediPlus
-            </span>
-          </Link>
-
+          <Logo />
           {/* Desktop Navigation */}
           <div className="hidden lg:flex lg:items-center lg:space-x-8">
             {navLinks.map((link) => (
@@ -44,19 +30,15 @@ export function Navbar() {
               </Link>
             ))}
           </div>
-
           {/* Desktop Actions */}
           <div className="hidden lg:flex lg:items-center lg:space-x-4">
             <ModeToggle />
-            <Button
-              variant="outline"
-              size="sm"
-              className="hidden xl:flex bg-transparent"
-            >
-              <User className="mr-2 h-4 w-4" />
-              Login
-            </Button>
-            <Button size="sm">Book Appointment</Button>
+            <Link href={"/login"}>
+              <Button>
+                <User className="mr-2 h-4 w-4" />
+                Login
+              </Button>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -95,19 +77,15 @@ export function Navbar() {
               {link.name}
             </Link>
           ))}
-          <div className="pt-4 border-t mt-4 space-y-3">
-            <div className="flex items-center px-3 py-2 text-sm text-muted-foreground">
-              <ModeToggle />
-            </div>
 
-            <Button
-              variant="outline"
-              className="w-full justify-start bg-transparent"
-            >
-              <User className="mr-2 h-4 w-4" />
-              Login
-            </Button>
-            <Button className="w-full">Book Appointment</Button>
+          <div className="flex justify-between pt-5 px-3">
+            <ModeToggle />
+            <Link href={"/login"}>
+              <Button>
+                <User className="mr-2 h-4 w-4" />
+                Login
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
