@@ -1,9 +1,5 @@
+import { Specialty } from "@/interface/spilaties";
 import Image from "next/image";
-interface Specialty {
-  id: string;
-  title: string;
-  icon: string;
-}
 
 export default async function Specialist() {
   const res = await fetch("http://localhost:5000/api/v1/specialties", {
