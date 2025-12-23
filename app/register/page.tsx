@@ -20,6 +20,9 @@ import { modifyPayload } from "@/utils/modifyPayload";
 import { registerPaient } from "@/services/actions/registerPatient";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { patientLogin } from "@/services/actions/loginPatient";
+import { storeUserInfo } from "@/services/auth.serivce";
+import { LogIn } from "lucide-react";
 
 type RegisterFormData = z.infer<typeof registerSchema>;
 
@@ -38,11 +41,21 @@ export default function RegisterPage() {
     try {
       const res = await registerPaient(data);
       if (res?.success && res?.data?.id) {
-        toast.success("register succssfully");
-        router.push("/login");
+        toast.success("  register succssfully", {
+          position: "top-center",
+          icon: <LogIn />,
+        });
+        const result = await patientLogin({
+          password: values.password,
+          email: values.patient.email,
+        });
+        if (result?.data?.accessToken) {
+          storeUserInfo({ accessToken: result?.data?.accessToken });
+        }
+        router.push("/");
       }
     } catch (err: any) {
-      toast.error("Registration failed");
+      toast.error(err?.message || "Something went wrong during registration");
     }
   };
 
