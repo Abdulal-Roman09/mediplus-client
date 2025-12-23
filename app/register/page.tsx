@@ -53,7 +53,6 @@ export default function RegisterPage() {
         <div className="flex items-center justify-center pt-6">
           <Logo />
         </div>
-
         {/* Header */}
         <CardHeader className="text-center space-y-4 pb-8">
           <CardTitle className="text-3xl font-bold text-foreground">

@@ -13,26 +13,37 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { loginSchema } from "@/Validation/LoginValidation";
 import Logo from "@/components/ux/components/logo";
 import Link from "next/link";
+import { toast } from "sonner";
+import { patientLogin } from "@/services/actions/loginPatient";
+import { useRouter } from "next/navigation";
+import { storeUserInfo } from "@/services/auth.serivce";
+import LoginSchema from "@/Validation/LoginValidation";
 
-type LoginFormData = z.infer<typeof loginSchema>;
+type LoginFormData = z.infer<typeof LoginSchema>;
 
 export default function LoginPage() {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(LoginSchema),
   });
 
-  const onSubmit = async (data: LoginFormData) => {
-    // Simulate login API call
-    console.log("Login data:", data);
-    await new Promise((resolve) => setTimeout(resolve, 1000)); // fake delay
-    alert("Login successful! (Check console)");
+  const onSubmit = async (values: LoginFormData) => {
+    try {
+      const res = await patientLogin(values);
+      if (res?.data?.accessToken) {
+        toast.success("Login in successfully");
+        storeUserInfo({ accessToken: res?.data?.accessToken });
+      }
+      router.push("/");
+    } catch (err: any) {
+      toast.error("Login filed");
+    }
   };
 
   return (
@@ -98,7 +109,7 @@ export default function LoginPage() {
 
             {/* Extra Links */}
             <Link href={"/register"} className=" text-sm text-muted-foreground">
-              if you have no account?{" "} ?{" "}
+              if you have no account? ?{" "}
               <span className="text-primary underline">Register</span>
             </Link>
           </form>
