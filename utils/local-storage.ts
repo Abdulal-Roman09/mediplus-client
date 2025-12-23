@@ -11,3 +11,19 @@ export const setToLoalStorage = (key: string, token: string) => {
         sameSite: 'lax'
     });
 }
+
+export const getFromLocalStorage = (key: string) => {
+
+    if (!key || typeof window === "undefined") {
+        return ""
+    }
+    return localStorage.getItem(key)
+}
+
+export const removeFromLocalStorage = (key: string) => {
+
+    if (!key || typeof window === "undefined") {
+        return ""
+    }
+    return localStorage.removeItem(key)
+}

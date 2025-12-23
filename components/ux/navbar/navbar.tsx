@@ -2,15 +2,30 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { Menu, X, User } from "lucide-react";
+import { Menu, X, User, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "./ModeToggle";
 import Logo from "../components/logo";
 import { navLinks } from "./navLink";
+import { getUserInfo, removeUser } from "@/services/auth.serivce";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export function Navbar() {
+  const router = useRouter();
+  const userInfo = getUserInfo();
   const [isOpen, setIsOpen] = React.useState(false);
+
+  const handleLogout = () => {
+    removeUser();
+    router.refresh();
+    toast.error("LogOut Successfully", {
+      position: "top-center",
+      duration: 2500,
+      icon: <LogOut size={16} />,
+    });
+  };
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur-md">
@@ -18,6 +33,7 @@ export function Navbar() {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Logo />
+
           {/* Desktop Navigation */}
           <div className="hidden lg:flex lg:items-center lg:space-x-8">
             {navLinks.map((link) => (
@@ -30,15 +46,24 @@ export function Navbar() {
               </Link>
             ))}
           </div>
+
           {/* Desktop Actions */}
           <div className="hidden lg:flex lg:items-center lg:space-x-4">
             <ModeToggle />
-            <Link href={"/login"}>
-              <Button>
-                <User className="mr-2 h-4 w-4" />
-                Login
+
+            {userInfo?.email ? (
+              <Button variant="destructive" onClick={handleLogout}>
+                <LogOut className="mr-2 h-4 w-4" />
+                Logout
               </Button>
-            </Link>
+            ) : (
+              <Link href="/login">
+                <Button>
+                  <User className="mr-2 h-4 w-4" />
+                  Login
+                </Button>
+              </Link>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -78,14 +103,26 @@ export function Navbar() {
             </Link>
           ))}
 
-          <div className="flex justify-between pt-5 px-3">
+          <div className="flex flex-col space-y-4 pt-6 px-3">
             <ModeToggle />
-            <Link href={"/login"}>
-              <Button>
-                <User className="mr-2 h-4 w-4" />
-                Login
+
+            {userInfo?.email ? (
+              <Button
+                variant="destructive"
+                onClick={handleLogout}
+                className="w-full justify-center"
+              >
+                <LogOut className="mr-2 h-4 w-4" />
+                Logout
               </Button>
-            </Link>
+            ) : (
+              <Link href="/login" onClick={() => setIsOpen(false)}>
+                <Button className="w-full justify-center">
+                  <User className="mr-2 h-4 w-4" />
+                  Login
+                </Button>
+              </Link>
+            )}
           </div>
         </div>
       </div>
