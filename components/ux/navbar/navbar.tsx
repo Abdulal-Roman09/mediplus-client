@@ -2,30 +2,16 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { Menu, X, User, LogOut } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 import { ModeToggle } from "./ModeToggle";
 import Logo from "../components/logo";
 import { navLinks } from "./navLink";
-import { getUserInfo, removeUser } from "@/services/auth.serivce";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 
 export function Navbar() {
-  const router = useRouter();
-  const userInfo = getUserInfo();
+  const AuthButton = dynamic(() => import("./AuthButton"), { ssr: false });
   const [isOpen, setIsOpen] = React.useState(false);
-
-  const handleLogout = () => {
-    removeUser();
-    router.refresh();
-    toast.error("LogOut Successfully", {
-      position: "top-center",
-      duration: 2500,
-      icon: <LogOut size={16} />,
-    });
-  };
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur-md">
@@ -50,20 +36,7 @@ export function Navbar() {
           {/* Desktop Actions */}
           <div className="hidden lg:flex lg:items-center lg:space-x-4">
             <ModeToggle />
-
-            {userInfo?.email ? (
-              <Button variant="destructive" onClick={handleLogout}>
-                <LogOut className="mr-2 h-4 w-4" />
-                Logout
-              </Button>
-            ) : (
-              <Link href="/login">
-                <Button>
-                  <User className="mr-2 h-4 w-4" />
-                  Login
-                </Button>
-              </Link>
-            )}
+            <AuthButton />
           </div>
 
           {/* Mobile Menu Button */}
@@ -105,24 +78,7 @@ export function Navbar() {
 
           <div className="flex flex-col space-y-4 pt-6 px-3">
             <ModeToggle />
-
-            {userInfo?.email ? (
-              <Button
-                variant="destructive"
-                onClick={handleLogout}
-                className="w-full justify-center"
-              >
-                <LogOut className="mr-2 h-4 w-4" />
-                Logout
-              </Button>
-            ) : (
-              <Link href="/login" onClick={() => setIsOpen(false)}>
-                <Button className="w-full justify-center">
-                  <User className="mr-2 h-4 w-4" />
-                  Login
-                </Button>
-              </Link>
-            )}
+            <AuthButton />
           </div>
         </div>
       </div>
