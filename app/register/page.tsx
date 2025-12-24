@@ -1,7 +1,6 @@
 "use client";
 
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { FieldValue } from "react-hook-form";
 import {
   Card,
   CardContent,
@@ -9,13 +8,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import Logo from "@/components/ux/components/logo";
 import Link from "next/link";
-import { registerSchema } from "@/Validation/RegisterValidation";
-import z from "zod";
 import { modifyPayload } from "@/utils/modifyPayload";
 import { registerPaient } from "@/services/actions/registerPatient";
 import { toast } from "sonner";
@@ -23,52 +18,50 @@ import { useRouter } from "next/navigation";
 import { patientLogin } from "@/services/actions/loginPatient";
 import { storeUserInfo } from "@/services/auth.serivce";
 import { LogIn } from "lucide-react";
-
-type RegisterFormData = z.infer<typeof registerSchema>;
+import FormHandler from "@/provider/FromProvider/FormHandler";
+import FormInput from "@/provider/FromProvider/FromInput";
 
 export default function RegisterPage() {
   const router = useRouter();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<RegisterFormData>({
-    resolver: zodResolver(registerSchema),
-  });
 
-  const onSubmit = async (values: RegisterFormData) => {
+  const handleRegister = async (values: FieldValue) => {
     const data = modifyPayload(values);
     try {
       const res = await registerPaient(data);
       if (res?.success && res?.data?.id) {
-        toast.success("  register succssfully", {
+        toast.success("Registration successful!", {
           position: "top-center",
-          icon: <LogIn />,
+          icon: <LogIn className="w-5 h-5" />,
         });
+
         const result = await patientLogin({
           password: values.password,
           email: values.patient.email,
         });
+
         if (result?.data?.accessToken) {
           storeUserInfo({ accessToken: result?.data?.accessToken });
         }
+
         router.push("/");
       }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       toast.error(err?.message || "Something went wrong during registration");
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12">
-      <Card className="w-full max-w-md md:max-w-2xl shadow-2xl border-0">
+    <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-background">
+      <Card className="w-full max-w-2xl shadow-xl border-0 px-4">
         {/* Logo */}
-        <div className="flex items-center justify-center pt-6">
+        <div className="flex justify-center pt-8 pb-4">
           <Logo />
         </div>
+
         {/* Header */}
-        <CardHeader className="text-center space-y-4 pb-8">
-          <CardTitle className="text-3xl font-bold text-foreground">
+        <CardHeader className="text-center space-y-3 pb-6">
+          <CardTitle className="text-2xl sm:text-3xl font-bold">
             Create Account
           </CardTitle>
           <CardDescription className="text-base">
@@ -77,111 +70,62 @@ export default function RegisterPage() {
         </CardHeader>
 
         {/* Form */}
-        <CardContent className="px-6 pb-8">
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            {/* Name - Full width */}
-            <div className="space-y-2">
-              <Label htmlFor="name">Full Name</Label>
-              <Input
-                id="name"
-                type="text"
-                placeholder="John Doe"
-                {...register("patient.name")}
-                className="h-12"
+        <CardContent className="space-y-6 pb-8">
+          <FormHandler onSubmit={handleRegister}>
+            <div className="space-y-6">
+              {/* Full Name */}
+              <FormInput
+                name="patient.name"
+                label="Full Name"
+                placeholder="Enter your full name"
+                required
               />
-              {errors.patient?.name && (
-                <p className="text-sm text-destructive">
-                  {errors.patient.name.message}
-                </p>
-              )}
-            </div>
 
-            {/* Email & Password - Side by side on md+ */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Email */}
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
+              {/* Email & Password */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <FormInput
+                  name="patient.email"
+                  label="Email"
                   type="email"
-                  placeholder="patient@example.com"
-                  {...register("patient.email")}
-                  className="h-12"
+                  placeholder="example@gmail.com"
+                  required
                 />
-                {errors.patient?.email && (
-                  <p className="text-sm text-destructive">
-                    {errors.patient.email.message}
-                  </p>
-                )}
-              </div>
-
-              {/* Password */}
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
+                <FormInput
+                  name="password"
+                  label="Password"
                   type="password"
                   placeholder="••••••••"
-                  {...register("password")}
-                  className="h-12"
+                  required
                 />
-                {errors.password && (
-                  <p className="text-sm text-destructive">
-                    {errors.password.message}
-                  </p>
-                )}
               </div>
+
+              {/* Contact & Address */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <FormInput
+                  name="patient.contactNumber"
+                  label="Contact Number"
+                  placeholder="017xxxxxxxxxx"
+                  required
+                />
+                <FormInput
+                  name="patient.address"
+                  label="Address"
+                  placeholder="Enter your full address"
+                  required
+                />
+              </div>
+
+              {/* Submit Button */}
+              <Button
+                type="submit"
+                className="w-full h-12 text-base font-medium hover:opacity-90 transition-opacity"
+              >
+                Register
+              </Button>
             </div>
-
-            {/* Contact Number & Address - Side by side on md+ */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Contact Number */}
-              <div className="space-y-2">
-                <Label htmlFor="contactNumber">Mobile Number</Label>
-                <Input
-                  id="contactNumber"
-                  type="tel"
-                  placeholder="01XXXXXXXXX"
-                  {...register("patient.contactNumber")}
-                  className="h-12"
-                />
-                {errors.patient?.contactNumber && (
-                  <p className="text-sm text-destructive">
-                    {errors.patient.contactNumber.message}
-                  </p>
-                )}
-              </div>
-
-              {/* Address */}
-              <div className="space-y-2">
-                <Label htmlFor="address">Address</Label>
-                <Input
-                  id="address"
-                  type="text"
-                  placeholder="123 Main St, Dhaka"
-                  {...register("patient.address")}
-                  className="h-12"
-                />
-                {errors.patient?.address && (
-                  <p className="text-sm text-destructive">
-                    {errors.patient.address.message}
-                  </p>
-                )}
-              </div>
-            </div>
-
-            {/* Submit Button */}
-            <Button
-              type="submit"
-              size="lg"
-              className="w-full h-12 text-lg font-medium"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? "Creating Account..." : "Register"}
-            </Button>
 
             {/* Login Link */}
-            <div className="text-center text-sm text-muted-foreground pt-4">
+            <p className="text-center text-sm text-muted-foreground pt-4">
               Already have an account?{" "}
               <Link
                 href="/login"
@@ -189,8 +133,8 @@ export default function RegisterPage() {
               >
                 Log In
               </Link>
-            </div>
-          </form>
+            </p>
+          </FormHandler>
         </CardContent>
       </Card>
     </div>
