@@ -18,7 +18,6 @@ export default function DashboardLayout({
           <div className="flex-1">
              <h1 className="text-sm font-semibold">Dashboard</h1>
           </div>
-          {/* এখানে আপনি চাইলে প্রোফাইল বা নোটিফিকেশন আইকন যোগ করতে পারেন */}
         </header>
 
         {/* Content Area */}

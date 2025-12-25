@@ -50,10 +50,7 @@ export function AppSidebar() {
                   /\/+/g,
                   "/"
                 );
-                const isActive =
-                  pathname === targetPath ||
-                  (item.path !== "" && pathname.startsWith(`${targetPath}/`));
-
+                const isActive = pathname === targetPath;
                 return (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
