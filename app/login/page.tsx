@@ -17,13 +17,12 @@ import FormHandler from "@/lib/provider/FromProvider/FormHandler";
 import FormInput from "@/lib/provider/FromProvider/FromInput";
 import { Button } from "@/components/ui/button";
 import LoginSchema from "@/Validation/LoginValidation";
-import type { LoginFormData } from "@/lib/validationSchemas";
-
+import { FieldValues } from "react-hook-form";
 
 export default function LoginPage() {
   const router = useRouter();
 
-  const hendelLogin = async (values: LoginFormData) => {
+  const hendelLogin = async (values: FieldValues) => {
     try {
       const res = await patientLogin(values);
       if (res?.data?.accessToken) {
@@ -33,7 +32,7 @@ export default function LoginPage() {
       } else {
         toast.error(res?.message || "Login failed");
       }
-    // eslint-disable-next-line
+      // eslint-disable-next-line
     } catch (err: any) {
       toast.error(err?.message || "Something went wrong");
     }

@@ -10,6 +10,7 @@ export const storeUserInfo = ({ accessToken }: { accessToken: string }) => {
 export const getUserInfo = () => {
     const authToken = getFromLocalStorage(authKey)
     if (authToken) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const decodedData: any = decodeToken(authToken)
         return {
             ...decodedData,

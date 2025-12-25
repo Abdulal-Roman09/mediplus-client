@@ -10,7 +10,7 @@ export type IMeta = {
 export type UserRole = keyof typeof USER_ROLE;
 
 
-type IconComponent = LucideIcon;
+type IconComponent = LucideIcon | undefined
 
 export interface DrawerItems {
     title: string;
