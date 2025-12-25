@@ -14,8 +14,8 @@ import Logo from "@/components/ux/components/logo";
 import { patientLogin } from "@/services/actions/loginPatient";
 import { useRouter } from "next/navigation";
 import { storeUserInfo } from "@/services/auth.serivce";
-import FormHandler from "@/provider/FromProvider/FormHandler";
-import FormInput from "@/provider/FromProvider/FromInput";
+import FormHandler from "@/lib/provider/FromProvider/FormHandler";
+import FormInput from "@/lib/provider/FromProvider/FromInput";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
@@ -52,8 +52,7 @@ export default function LoginPage() {
         </CardHeader>
 
         <CardContent>
-          <FormHandler
-          onSubmit={hendelLogin}>
+          <FormHandler onSubmit={hendelLogin}>
             <FormInput
               name="email"
               label="email"

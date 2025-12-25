@@ -36,6 +36,7 @@ export default function FormInput({
             id={name}
             type={type}
             placeholder={placeholder}
+            required
             className={`${
               error
                 ? "border-red-500 focus-visible:ring-red-500"

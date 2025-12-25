@@ -18,8 +18,8 @@ import { useRouter } from "next/navigation";
 import { patientLogin } from "@/services/actions/loginPatient";
 import { storeUserInfo } from "@/services/auth.serivce";
 import { LogIn } from "lucide-react";
-import FormHandler from "@/provider/FromProvider/FormHandler";
-import FormInput from "@/provider/FromProvider/FromInput";
+import FormHandler from "@/lib/provider/FromProvider/FormHandler";
+import FormInput from "@/lib/provider/FromProvider/FromInput";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -44,8 +44,10 @@ export default function RegisterPage() {
         }
 
         router.push("/");
+      } else {
+        toast.error("Something went wrong during registration");
       }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       toast.error(err?.message || "Something went wrong during registration");
     }
