@@ -7,8 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { FieldValues } from "react-hook-form";
-
+import Link from "next/link";
 import { toast } from "sonner";
 import Logo from "@/components/ux/components/logo";
 import { patientLogin } from "@/services/actions/loginPatient";
@@ -17,22 +16,26 @@ import { storeUserInfo } from "@/services/auth.serivce";
 import FormHandler from "@/lib/provider/FromProvider/FormHandler";
 import FormInput from "@/lib/provider/FromProvider/FromInput";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import LoginSchema from "@/Validation/LoginValidation";
+import type { LoginFormData } from "@/lib/validationSchemas";
+
 
 export default function LoginPage() {
   const router = useRouter();
 
-  const hendelLogin = async (values: FieldValues) => {
+  const hendelLogin = async (values: LoginFormData) => {
     try {
       const res = await patientLogin(values);
       if (res?.data?.accessToken) {
         toast.success("Login successful");
         storeUserInfo({ accessToken: res?.data?.accessToken });
         router.push("/dashboard");
+      } else {
+        toast.error(res?.message || "Login failed");
       }
-      // eslint-disable-next-line
+    // eslint-disable-next-line
     } catch (err: any) {
-      toast.error(err.message);
+      toast.error(err?.message || "Something went wrong");
     }
   };
 
@@ -50,30 +53,34 @@ export default function LoginPage() {
             Log in to your doctor appointment account
           </CardDescription>
         </CardHeader>
-
         <CardContent>
-          <FormHandler onSubmit={hendelLogin}>
+          <FormHandler
+            onSubmit={hendelLogin}
+            resolver={LoginSchema}
+            defaultValues={{ email: "", password: "" }}
+          >
             <FormInput
               name="email"
-              label="email"
+              label="Email"
               type="email"
-              placeholder="example@gamil.com"
+              placeholder="example@gmail.com"
               required
             />
             <FormInput
               name="password"
-              label="password"
+              label="Password"
               type="password"
               placeholder="*******"
               required
             />
-            <Button className="w-full" type="submit">
+            <Button className="w-full mt-4" type="submit">
               Login
             </Button>
           </FormHandler>
-          {/* Login Link */}
-          <div className=" text-sm text-muted-foreground pt-4">
-            Already have an account?{" "}
+
+          {/* fixed the typo */}
+          <div className="text-sm text-muted-foreground pt-4 text-center">
+            {" Don't have an account? "}
             <Link
               href="/register"
               className="text-primary font-medium underline hover:text-primary/80"

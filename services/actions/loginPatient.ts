@@ -3,17 +3,22 @@
 import { FieldValues } from "react-hook-form";
 
 export const patientLogin = async (data: FieldValues) => {
+    try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/auth/login`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+            cache: "no-store",
+        });
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/auth/login`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-        cache: "no-store",
-    });
-
-    const patientInfo = await res.json();
-
-    return patientInfo
+        const patientInfo = await res.json();
+        return patientInfo;
+    } catch (error) {
+        return {
+            success: false,
+            message: "Server Connection Error",
+        };
+    }
 };

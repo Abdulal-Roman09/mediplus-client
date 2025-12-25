@@ -21,6 +21,7 @@ import { getUserInfo } from "@/services/auth.serivce";
 export function AppSidebar() {
   const pathname = usePathname();
   const { role } = getUserInfo();
+  console.log(role)
   const menuItems = drawerItems(role);
 
   return (
@@ -38,7 +39,6 @@ export function AppSidebar() {
         </SidebarMenu>
         <SidebarSeparator className="my-2" />
       </SidebarHeader>
-
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel className="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">
