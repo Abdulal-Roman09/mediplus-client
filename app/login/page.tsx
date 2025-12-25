@@ -28,7 +28,7 @@ export default function LoginPage() {
       if (res?.data?.accessToken) {
         toast.success("Login successful");
         storeUserInfo({ accessToken: res?.data?.accessToken });
-        router.push("/");
+        router.push("/dashboard");
       }
       // eslint-disable-next-line
     } catch (err: any) {
