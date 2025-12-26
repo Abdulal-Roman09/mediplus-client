@@ -1,16 +1,17 @@
 "use client";
 
+import * as z from "zod";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Search } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { useState } from "react";
 import Modal from "@/components/ux/Model/Modal";
 import FormHendeler from "@/components/ux/FromProvider/FormHandler";
 import FormInput from "@/components/ux/FromProvider/FromInput";
 import FormFileUploader from "@/components/ux/FromProvider/FromFileuploader";
+import { modifyPayload } from "@/utils/modifyPayload";
 
 const specialtySchema = z.object({
   title: z.string().min(3, { message: "Title must be at least 3 characters" }),
@@ -22,8 +23,8 @@ type FormData = z.infer<typeof specialtySchema>;
 export default function SpecialtiesPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const onSubmit = (data: FormData) => {
-    console.log("Specialty Created:", data);
+  const onSubmit = (values: FormData) => {
+    const data = modifyPayload(values);
     setIsModalOpen(false);
   };
 
@@ -58,7 +59,6 @@ export default function SpecialtiesPage() {
                 <Label>Icon / Picture (Optional)</Label>
                 <FormFileUploader
                   name="icon"
-                  size="lg"
                   label="Upload Icon"
                   className="max-w-full"
                 />

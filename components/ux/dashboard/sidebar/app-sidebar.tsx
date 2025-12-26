@@ -21,7 +21,7 @@ import { getUserInfo } from "@/services/auth.serivce";
 export function AppSidebar() {
   const pathname = usePathname();
   const userInfo = getUserInfo();
-  const role = userInfo?.role || "PATIENT";
+  const role = userInfo?.role || "";
   const menuItems = drawerItems(role);
 
   return (
