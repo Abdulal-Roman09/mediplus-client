@@ -11,7 +11,10 @@ import {
     Heart,
     History,
     Settings,
+    Pill,
+    Syringe
 } from "lucide-react";
+
 
 export const drawerItems = (role: UserRole): DrawerItems[] => {
     const roleMenus: DrawerItems[] = [];
@@ -43,6 +46,11 @@ export const drawerItems = (role: UserRole): DrawerItems[] => {
                     title: "Doctors",
                     path: `${role}/doctors`,
                     icon: Stethoscope,
+                },
+                {
+                    title: "Specialties",
+                    path: `${role}/specialties`,
+                    icon: Pill,
                 },
                 {
                     title: "Appointments",

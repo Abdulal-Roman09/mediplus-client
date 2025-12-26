@@ -16,6 +16,6 @@ export interface DrawerItems {
     title: string;
     path: string;
     parentPath?: string;
-    icon?: IconComponent;
+    icon?: IconComponent | undefined;
     child?: DrawerItems[];
 }

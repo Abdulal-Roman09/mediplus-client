@@ -1,6 +1,5 @@
 "use client";
 
-import { FieldValue } from "react-hook-form";
 import {
   Card,
   CardContent,
@@ -18,22 +17,28 @@ import { useRouter } from "next/navigation";
 import { patientLogin } from "@/services/actions/loginPatient";
 import { storeUserInfo } from "@/services/auth.serivce";
 import { LogIn } from "lucide-react";
-import FormHandler from "@/lib/provider/FromProvider/FormHandler";
-import FormInput from "@/lib/provider/FromProvider/FromInput";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import FormHendeler from "@/components/ux/FromProvider/FormHandler";
+import FormInput from "@/components/ux/FromProvider/FromInput";
+import { RegisterSchema } from "@/Validation/RegisterValidation";
+
+export type RegisterFormData = z.infer<typeof RegisterSchema>;
 
 export default function RegisterPage() {
   const router = useRouter();
 
-  const handleRegister = async (values: FieldValue) => {
+  const handleRegister = async (values: RegisterFormData) => {
     const data = modifyPayload(values);
+
     try {
       const res = await registerPaient(data);
+
       if (res?.success && res?.data?.id) {
         toast.success("Registration successful!", {
           position: "top-center",
           icon: <LogIn className="w-5 h-5" />,
         });
-
         const result = await patientLogin({
           password: values.password,
           email: values.patient.email,
@@ -43,11 +48,11 @@ export default function RegisterPage() {
           storeUserInfo({ accessToken: result?.data?.accessToken });
         }
 
-        router.push("/");
+        router.push("/dashboard");
       } else {
-        toast.error("Something went wrong during registration");
+        toast.error(res?.message || "Something went wrong during registration");
       }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line
     } catch (err: any) {
       toast.error(err?.message || "Something went wrong during registration");
     }
@@ -72,8 +77,20 @@ export default function RegisterPage() {
         </CardHeader>
 
         {/* Form */}
-        <CardContent className="space-y-6 pb-8">
-          <FormHandler onSubmit={handleRegister}>
+        <CardContent className="pb-8">
+          <FormHendeler
+            onSubmit={handleRegister}
+            resolver={zodResolver(RegisterSchema)}
+            defaultValues={{
+              password: "",
+              patient: {
+                name: "",
+                email: "",
+                contactNumber: "",
+                address: "",
+              },
+            }}
+          >
             <div className="space-y-6">
               {/* Full Name */}
               <FormInput
@@ -120,14 +137,14 @@ export default function RegisterPage() {
               {/* Submit Button */}
               <Button
                 type="submit"
-                className="w-full h-12 text-base font-medium hover:opacity-90 transition-opacity"
+                className="w-full h-12 text-base font-medium"
               >
                 Register
               </Button>
             </div>
 
             {/* Login Link */}
-            <p className="text-center text-sm text-muted-foreground pt-4">
+            <p className="text-center text-sm text-muted-foreground pt-6">
               Already have an account?{" "}
               <Link
                 href="/login"
@@ -136,7 +153,7 @@ export default function RegisterPage() {
                 Log In
               </Link>
             </p>
-          </FormHandler>
+          </FormHendeler>
         </CardContent>
       </Card>
     </div>
