@@ -8,12 +8,14 @@ type FormFileUploaderProps = {
   name: string;
   label?: string;
   className?: string;
+  accept?: string;
 };
 
 export default function FormFileUploader({
   name,
   label,
   className,
+  accept,
 }: FormFileUploaderProps) {
   const { control } = useFormContext();
 
@@ -52,6 +54,7 @@ export default function FormFileUploader({
                   {...field}
                   id={name}
                   type="file"
+                  accept={accept}
                   className="sr-only"
                   onChange={(e) => {
                     const file = e.target.files?.[0] || null;

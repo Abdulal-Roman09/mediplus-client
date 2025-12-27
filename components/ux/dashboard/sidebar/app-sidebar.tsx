@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import {
   Sidebar,
   SidebarContent,
@@ -20,13 +21,21 @@ import { getUserInfo } from "@/services/auth.serivce";
 
 export function AppSidebar() {
   const pathname = usePathname();
-  const userInfo = getUserInfo();
-  const role = userInfo?.role || "";
+  const [role, setRole] = useState<string>("");
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    const info = getUserInfo();
+    setRole(info?.role || "");
+    setMounted(true); // only render after client mount
+  }, []);
+
+  if (!mounted) return null; // skip server render
+
   const menuItems = drawerItems(role);
 
   return (
     <Sidebar collapsible="icon">
-      {/* Sidebar Header */}
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
@@ -52,6 +61,7 @@ export function AppSidebar() {
                   "/"
                 );
                 const isActive = pathname === targetPath;
+
                 return (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
@@ -59,21 +69,24 @@ export function AppSidebar() {
                       tooltip={item.title}
                       isActive={isActive}
                       className={`relative flex items-center gap-3 px-4 py-2 transition-all duration-200 group
-                      ${
-                        isActive
-                          ? "bg-primary/10 text-primary font-medium hover:bg-primary/15"
-                          : "hover:bg-accent hover:text-accent-foreground "
-                      }`}
+                        ${
+                          isActive
+                            ? "bg-primary/10 text-primary font-medium hover:bg-primary/15"
+                            : "hover:bg-accent hover:text-accent-foreground"
+                        }`}
                     >
                       <Link href={targetPath}>
-                        <item.icon
-                          className={`size-5 ${isActive ? "text-primary" : ""}`}
-                        />
+                        {item.icon && (
+                          <item.icon
+                            className={`size-5 ${
+                              isActive ? "text-primary" : ""
+                            }`}
+                          />
+                        )}
                         <span>{item.title}</span>
 
-                        {/* Active Indicator*/}
                         {isActive && (
-                          <span className="absolute right-0 h-8 w-full   bg-primary/20 rounded " />
+                          <span className="absolute right-0 h-8 w-full bg-primary/20 rounded" />
                         )}
                       </Link>
                     </SidebarMenuButton>

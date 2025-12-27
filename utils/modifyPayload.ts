@@ -6,7 +6,9 @@ export const modifyPayload = (values: any) => {
     const data = JSON.stringify(obj)
     const formData = new FormData();
     formData.append("data", data)
-    formData.append("file", file as Blob)
+    if (file) {
+        formData.append("file", file);
+    }
 
     return formData;
 };

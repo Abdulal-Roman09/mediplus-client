@@ -12,20 +12,47 @@ import FormHendeler from "@/components/ux/FromProvider/FormHandler";
 import FormInput from "@/components/ux/FromProvider/FromInput";
 import FormFileUploader from "@/components/ux/FromProvider/FromFileuploader";
 import { modifyPayload } from "@/utils/modifyPayload";
+import { post } from "@/services/api/api";
+import { toast } from "sonner";
 
 const specialtySchema = z.object({
   title: z.string().min(3, { message: "Title must be at least 3 characters" }),
-  icon: z.instanceof(File).optional(),
+  file: z
+    .any()
+    .refine((file) => file instanceof File, "Please upload a valid file"),
 });
 
 type FormData = z.infer<typeof specialtySchema>;
 
 export default function SpecialtiesPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const onSubmit = (values: FormData) => {
+  const onSubmit = async (values: FormData) => {
+    setIsLoading(true);
     const data = modifyPayload(values);
-    setIsModalOpen(false);
+    try {
+      await post("/specialties", data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      toast.success("Specialty created successfully.", {
+        position: "top-center",
+      });
+      setIsModalOpen(false);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      const errorMessage =
+        error?.response?.data?.message ||
+        error?.message ||
+        "Failed to create specialty. Please try again.";
+      toast.error(errorMessage, {
+        position: "top-center",
+      });
+      console.log(errorMessage);
+      console.log(error);
+    }
   };
 
   return (
@@ -54,12 +81,12 @@ export default function SpecialtiesPage() {
                 required
               />
 
-              {/* Icon Upload (Optional) */}
+              {/* file Upload (Optional) */}
               <div className="grid gap-2">
-                <Label>Icon / Picture (Optional)</Label>
+                <Label>File / Picture (Optional)</Label>
                 <FormFileUploader
-                  name="icon"
-                  label="Upload Icon"
+                  name="file"
+                  label="Upload file"
                   className="max-w-full"
                 />
               </div>
