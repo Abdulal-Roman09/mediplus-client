@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Providers } from "@/lib/provider/providers";
-
+import TanstackQueryProvider from "@/lib/provider/tanstackQuery";
 
 export const metadata: Metadata = {
   title: "MediPlus",
@@ -16,7 +16,9 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-        <Providers>{children}</Providers>
+        <TanstackQueryProvider>
+          <Providers>{children}</Providers>
+        </TanstackQueryProvider>
       </body>
     </html>
   );
