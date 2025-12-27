@@ -1,124 +1,93 @@
 "use client";
 
-import * as z from "zod";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Search } from "lucide-react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import Modal from "@/components/ux/Model/Modal";
-import FormHendeler from "@/components/ux/FromProvider/FormHandler";
-import FormInput from "@/components/ux/FromProvider/FromInput";
-import FormFileUploader from "@/components/ux/FromProvider/FromFileuploader";
-import { modifyPayload } from "@/utils/modifyPayload";
-import { post } from "@/services/api/api";
+import { useState, useMemo } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-const specialtySchema = z.object({
-  title: z.string().min(3, { message: "Title must be at least 3 characters" }),
-  file: z
-    .any()
-    .refine((file) => file instanceof File, "Please upload a valid file"),
-});
+import { Table, TableBody, TableHeader, TableHead, TableRow } from "@/components/ui/table";
+import { get, del } from "@/services/api/api";
+import { Specialty } from "@/interface/spilaties";
+import { SpecialtiesHeader } from "@/components/ux/dashboard/admin/specialties/SpecialtiesHeader";
+import { CreateSpecialtyModal } from "@/components/ux/dashboard/admin/specialties/CreateSpecialtyModal";
+import { SpecialtiesFilters } from "@/components/ux/dashboard/admin/specialties/SpecialtiesFilters";
+import { SpecialtiesTable } from "@/components/ux/dashboard/admin/specialties/SpecialtiesTable";
 
-type FormData = z.infer<typeof specialtySchema>;
 
 export default function SpecialtiesPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [limit, setLimit] = useState("10");
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
-  const onSubmit = async (values: FormData) => {
-    setIsLoading(true);
-    const data = modifyPayload(values);
+  const queryClient = useQueryClient();
+
+  const { data, isPending } = useQuery<Specialty[]>({
+    queryKey: ["specialties"],
+    queryFn: async () => {
+      const res = await get("/specialties");
+      return res.data;
+    },
+  });
+
+  const filteredData = useMemo(() => {
+    if (!data) return [];
+    const filtered = data.filter((item) =>
+      item.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    return filtered.slice(0, Number(limit));
+  }, [data, searchTerm, limit]);
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this?")) return;
+    setDeletingId(id);
     try {
-      await post("/specialties", data, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      toast.success("Specialty created successfully.", {
-        position: "top-center",
-      });
-      setIsModalOpen(false);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      const errorMessage =
-        error?.response?.data?.message ||
-        error?.message ||
-        "Failed to create specialty. Please try again.";
-      toast.error(errorMessage, {
-        position: "top-center",
-      });
-      console.log(errorMessage);
-      console.log(error);
+      await del(`/specialties/${id}`);
+      toast.success("Deleted successfully.");
+      queryClient.invalidateQueries({ queryKey: ["specialties"] });
+    } catch {
+      toast.error("Failed to delete.");
+    } finally {
+      setDeletingId(null);
     }
   };
 
   return (
-    <div className="p-6">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 mb-8">
-        {/* Create Specialty Modal */}
-        <Modal
-          open={isModalOpen}
-          onOpenChange={setIsModalOpen}
-          trigger={<Button size="lg">Create Specialties</Button>}
-          title="Create New Specialty"
-        >
-          <FormHendeler
-            onSubmit={onSubmit}
-            resolver={zodResolver(specialtySchema)}
-            defaultValues={{
-              title: "",
-            }}
-          >
-            <div className="space-y-6">
-              {/* Specialty Title */}
-              <FormInput
-                name="title"
-                label="Specialty Title"
-                placeholder="e.g., Cardiology, Neurology"
-                required
-              />
+    <div className="p-6 space-y-6">
+      <SpecialtiesHeader onOpenModal={() => setIsModalOpen(true)} />
 
-              {/* file Upload (Optional) */}
-              <div className="grid gap-2">
-                <Label>File / Picture (Optional)</Label>
-                <FormFileUploader
-                  name="file"
-                  label="Upload file"
-                  className="max-w-full"
-                />
-              </div>
+      <CreateSpecialtyModal open={isModalOpen} onOpenChange={setIsModalOpen} />
 
-              {/* Action Buttons */}
-              <div className="flex justify-end gap-3 pt-4">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setIsModalOpen(false)}
-                >
-                  Cancel
-                </Button>
-                <Button type="submit">Create Specialty</Button>
-              </div>
-            </div>
-          </FormHendeler>
-        </Modal>
+      <SpecialtiesFilters
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+        limit={limit}
+        onLimitChange={setLimit}
+      />
 
-        {/* Search Bar */}
-        <div className="w-full sm:w-96 relative">
-          <Input
-            placeholder="Search specialties..."
-            className="pl-10 pr-4 h-11"
-          />
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 size-5 text-muted-foreground" />
-        </div>
+      <div className="rounded-md border bg-white overflow-hidden">
+        <Table>
+          <TableHeader className="bg-muted/50">
+            <TableRow>
+              <TableHead className="w-[100px]">Icon</TableHead>
+              <TableHead>Specialty Name</TableHead>
+              <TableHead className="text-right">Action</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            <SpecialtiesTable
+              data={data}
+              isPending={isPending}
+              filteredData={filteredData}
+              searchTerm={searchTerm}
+              onDelete={handleDelete}
+              deletingId={deletingId}
+            />
+          </TableBody>
+        </Table>
       </div>
 
-      {/* Specialties List Placeholder */}
-      <div className="mt-8 text-center text-muted-foreground py-16 border-2 border-dashed rounded-xl">
-        Specialties list will appear here...
+      <div className="text-xs text-muted-foreground px-2">
+        Showing {filteredData.length} of {data?.length || 0} specialties
       </div>
     </div>
   );

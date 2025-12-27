@@ -28,7 +28,7 @@ export const patch = async <T, D = unknown>(
 };
 
 // DELETE
-export const deleteRequest = async <T>(url: string): Promise<T> => {
+export const del = async <T>(url: string): Promise<T> => {
     const response = await axiosInstance.delete(url);
     return response.data;
 };

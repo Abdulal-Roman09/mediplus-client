@@ -1,18 +1,22 @@
 import { Specialty } from "@/interface/spilaties";
 import Image from "next/image";
+import { toast } from "sonner";
 
 export default async function Specialist() {
   let specialties: Specialty[] = [];
 
   try {
-    const res = await fetch("http://localhost:5000/api/v1/specialties", {
-      next: { revalidate: 60 },
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/specialties`,
+      {
+        next: { revalidate: 60 },
+      }
+    );
 
     const result = await res.json();
     specialties = result?.data || [];
   } catch (error) {
-    console.error("Failed to fetch specialties:", error);
+    toast.error("Failed to fetch specialties:");
   }
 
   return (
