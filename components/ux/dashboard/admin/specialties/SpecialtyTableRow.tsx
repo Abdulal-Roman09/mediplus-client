@@ -9,7 +9,7 @@ export function SpecialtyTableRow({
   isDeleting,
 }: SpecialtyTableRowProps) {
   return (
-    <TableRow className="hover:bg-muted/30 transition-colors">
+    <TableRow className="hover:bg-muted/80 transition-colors">
       <TableCell className="pl-6">
         {item.file ? (
           <Image
@@ -17,7 +17,7 @@ export function SpecialtyTableRow({
             alt={item.title}
             width={40}
             height={40}
-            className="rounded-lg object-cover border bg-gray-50"
+            className="rounded-lg object-cover "
           />
         ) : (
           <div className="size-10 bg-muted rounded-lg border border-dashed flex items-center justify-center text-[10px] text-muted-foreground">
@@ -25,7 +25,7 @@ export function SpecialtyTableRow({
           </div>
         )}
       </TableCell>
-      <TableCell className="font-medium text-center text-slate-700">{item.title}</TableCell>
+      <TableCell className="font-medium text-center">{item.title}</TableCell>
       <TableCell className="text-right">
         <SpecialtyActions
           id={item.id}
