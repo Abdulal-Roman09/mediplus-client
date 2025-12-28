@@ -51,8 +51,6 @@ export default function SpecialtiesPage() {
       queryClient.invalidateQueries({ queryKey: ["specialties"] });
     } catch {
       toast.error("Failed to delete.");
-    } finally {
-      setDeletingId(null);
     }
   };
 
@@ -60,12 +58,12 @@ export default function SpecialtiesPage() {
     <div className="p-6 space-y-6">
       <SpecialtiesHeader onOpenModal={() => setIsModalOpen(true)} />
       <CreateSpecialtyModal open={isModalOpen} onOpenChange={setIsModalOpen} />
-      <SpecialtiesFilters
+      {/* <SpecialtiesFilters
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
         limit={limit}
         onLimitChange={setLimit}
-      />
+      /> */}
       <div className="rounded-md border overflow-hidden">
         <Table>
           <TableHeader className="bg-muted/50">

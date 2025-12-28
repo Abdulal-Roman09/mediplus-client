@@ -14,7 +14,7 @@ import {
   SidebarSeparator,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
-import Logo from "../../components/logo";
+import Logo from "../../../components/logo";
 import { usePathname } from "next/navigation";
 import { drawerItems } from "@/utils/drawerItems";
 import { getUserInfo } from "@/services/auth.serivce";
@@ -26,6 +26,7 @@ export function AppSidebar() {
 
   useEffect(() => {
     const info = getUserInfo();
+    console.log(info)
     setRole(info?.role || "");
     setMounted(true); // only render after client mount
   }, []);

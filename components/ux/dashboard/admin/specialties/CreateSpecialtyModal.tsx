@@ -54,7 +54,11 @@ export function CreateSpecialtyModal({
             placeholder="e.g. Cardiology"
             required
           />
-          <FormFileUploader name="file" label="Upload Specialty Icon" />
+          <FormFileUploader
+            className="w-full"
+            name="file"
+            label="Upload Specialty Icon"
+          />
           <div className="flex justify-end gap-3">
             <Button
               type="button"
