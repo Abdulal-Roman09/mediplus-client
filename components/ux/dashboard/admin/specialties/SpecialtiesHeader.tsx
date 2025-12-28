@@ -1,9 +1,6 @@
 import { Button } from "@/components/ui/button";
+import { SpecialtiesHeaderProps } from "@/types/adminSpecialtiesProps";
 import { Plus } from "lucide-react";
-
-interface SpecialtiesHeaderProps {
-  onOpenModal: () => void;
-}
 
 export function SpecialtiesHeader({ onOpenModal }: SpecialtiesHeaderProps) {
   return (

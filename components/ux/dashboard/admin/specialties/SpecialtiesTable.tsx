@@ -1,26 +1,9 @@
-import {
-  Table,
-  TableBody,
-  TableHead,
-  TableHeader,
-  TableRow,
-  TableCell,
-} from "@/components/ui/table";
+import { TableRow, TableCell } from "@/components/ui/table";
 import { Loader2 } from "lucide-react";
 import { SpecialtyTableRow } from "./SpecialtyTableRow";
-import { Specialty } from "@/interface/spilaties";
-
-interface SpecialtiesTableProps {
-  data: Specialty[] | undefined;
-  isPending: boolean;
-  filteredData: Specialty[];
-  searchTerm: string;
-  onDelete: (id: string) => void;
-  deletingId: string | null;
-}
+import { SpecialtiesTableProps } from "@/types/adminSpecialtiesProps";
 
 export function SpecialtiesTable({
-  data,
   isPending,
   filteredData,
   searchTerm,
@@ -41,8 +24,13 @@ export function SpecialtiesTable({
   if (filteredData.length === 0) {
     return (
       <TableRow>
-        <TableCell colSpan={3} className="h-32 text-center text-muted-foreground">
-          {searchTerm ? "No results found for your search." : "No specialties available."}
+        <TableCell
+          colSpan={3}
+          className="h-32 text-center text-muted-foreground"
+        >
+          {searchTerm
+            ? "No results found for your search."
+            : "No specialties available."}
         </TableCell>
       </TableRow>
     );

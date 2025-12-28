@@ -1,13 +1,6 @@
-// components/ux/dashboard/admin/specialties/SpecialtiesPagination.tsx
-
 import { Button } from "@/components/ui/button";
+import { SpecialtiesPaginationProps } from "@/types/adminSpecialtiesProps";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-
-interface SpecialtiesPaginationProps {
-  currentPage: number;
-  totalPages: number;
-  onPageChange: (page: number) => void;
-}
 
 export function SpecialtiesPagination({
   currentPage,

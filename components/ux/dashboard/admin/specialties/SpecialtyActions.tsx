@@ -6,14 +6,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { EllipsisVertical, Trash2, Loader2 } from "lucide-react";
+import { SpecialtyActionsProps } from "@/types/adminSpecialtiesProps";
 
-interface SpecialtyActionsProps {
-  id: string;
-  onDelete: (id: string) => void;
-  isDeleting: boolean;
-}
-
-export function SpecialtyActions({ id, onDelete, isDeleting }: SpecialtyActionsProps) {
+export function SpecialtyActions({
+  id,
+  onDelete,
+  isDeleting,
+}: SpecialtyActionsProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

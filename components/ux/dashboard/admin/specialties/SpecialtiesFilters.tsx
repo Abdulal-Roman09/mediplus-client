@@ -1,13 +1,13 @@
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { SpecialtiesFiltersProps } from "@/types/adminSpecialtiesProps";
 import { Search } from "lucide-react";
-
-interface SpecialtiesFiltersProps {
-  searchTerm: string;
-  onSearchChange: (value: string) => void;
-  limit: string;
-  onLimitChange: (value: string) => void;
-}
 
 export function SpecialtiesFilters({
   searchTerm,
@@ -28,7 +28,9 @@ export function SpecialtiesFilters({
       </div>
 
       <div className="flex items-center gap-2 ml-auto">
-        <span className="text-sm text-muted-foreground whitespace-nowrap">Show:</span>
+        <span className="text-sm text-muted-foreground whitespace-nowrap">
+          Show:
+        </span>
         <Select value={limit} onValueChange={onLimitChange}>
           <SelectTrigger className="w-[80px]">
             <SelectValue />

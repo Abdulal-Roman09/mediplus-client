@@ -10,24 +10,10 @@ import { modifyPayload } from "@/utils/modifyPayload";
 import { post } from "@/services/api/api";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-
-const specialtySchema = z.object({
-  title: z.string().min(3, { message: "Title must be at least 3 characters" }),
-  file: z
-    .any()
-    .optional()
-    .refine(
-      (file) => !file || file instanceof File,
-      "Please upload a valid file"
-    ),
-});
+import { specialtySchema } from "@/Validation/specialtySchema";
+import { CreateSpecialtyModalProps } from "@/types/adminSpecialtiesProps";
 
 type FormData = z.infer<typeof specialtySchema>;
-
-interface CreateSpecialtyModalProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-}
 
 export function CreateSpecialtyModal({
   open,
@@ -46,7 +32,7 @@ export function CreateSpecialtyModal({
       toast.success("Specialty created successfully.");
       onOpenChange(false);
       queryClient.invalidateQueries({ queryKey: ["specialties"] });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line
     } catch (error: any) {
       toast.error(error?.message || "Failed to create specialty.");
     } finally {

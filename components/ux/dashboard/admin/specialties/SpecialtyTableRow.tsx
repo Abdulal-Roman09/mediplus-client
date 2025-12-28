@@ -1,18 +1,16 @@
 import { TableCell, TableRow } from "@/components/ui/table";
 import Image from "next/image";
 import { SpecialtyActions } from "./SpecialtyActions";
-import { Specialty } from "@/interface/spilaties";
+import { SpecialtyTableRowProps } from "@/types/adminSpecialtiesProps";
 
-interface SpecialtyTableRowProps {
-  item: Specialty;
-  onDelete: (id: string) => void;
-  isDeleting: boolean;
-}
-
-export function SpecialtyTableRow({ item, onDelete, isDeleting }: SpecialtyTableRowProps) {
+export function SpecialtyTableRow({
+  item,
+  onDelete,
+  isDeleting,
+}: SpecialtyTableRowProps) {
   return (
     <TableRow className="hover:bg-muted/30 transition-colors">
-      <TableCell>
+      <TableCell className="pl-6">
         {item.file ? (
           <Image
             src={item.file}
@@ -27,9 +25,13 @@ export function SpecialtyTableRow({ item, onDelete, isDeleting }: SpecialtyTable
           </div>
         )}
       </TableCell>
-      <TableCell className="font-medium text-slate-700">{item.title}</TableCell>
+      <TableCell className="font-medium text-center text-slate-700">{item.title}</TableCell>
       <TableCell className="text-right">
-        <SpecialtyActions id={item.id} onDelete={onDelete} isDeleting={isDeleting} />
+        <SpecialtyActions
+          id={item.id}
+          onDelete={onDelete}
+          isDeleting={isDeleting}
+        />
       </TableCell>
     </TableRow>
   );
