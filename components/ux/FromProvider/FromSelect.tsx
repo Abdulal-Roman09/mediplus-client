@@ -1,4 +1,3 @@
-import * as React from "react";
 import {
   FormControl,
   FormItem,
@@ -12,8 +11,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Controller, useFormContext } from "react-hook-form";
 import { cn } from "@/lib/utils";
+import { Controller, useFormContext } from "react-hook-form";
 
 type SelectOption = {
   value: string;

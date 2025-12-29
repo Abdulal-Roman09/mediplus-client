@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { SpecialtiesPaginationProps } from "@/types/adminSpecialtiesProps";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { SpecialtiesPaginationProps } from "@/types/adminSpecialtiesProps";
 
 export function SpecialtiesPagination({
   currentPage,

@@ -6,10 +6,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Avatar, AvatarFallback} from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Doctor } from "@/interface/doctor";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback} from "@/components/ui/avatar";
 
 export default async function TopRatedDoctors() {
   const res = await fetch(

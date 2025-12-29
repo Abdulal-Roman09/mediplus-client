@@ -1,9 +1,9 @@
+import Link from "next/link";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { LogOut, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getUserInfo, removeUser } from "@/services/auth.serivce";
-import { LogOut, User } from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 
 export default function AuthButton() {
   const userInfo = getUserInfo();

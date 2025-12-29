@@ -1,22 +1,21 @@
 "use client";
 
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { Separator } from "@/components/ui/separator";
-import { ModeToggle } from "@/components/ux/navbar/ModeToggle";
-import { getUserInfo } from "@/services/auth.serivce";
-
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Bell } from "lucide-react";
-import { AppSidebar } from "./sidebar/app-sidebar";
 import { useEffect, useState } from "react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { AppSidebar } from "./sidebar/app-sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Separator } from "@/components/ui/separator";
+import { getUserInfo } from "@/services/auth.serivce";
 import DashboardUserAvator from "./DashboardUserAvator";
+import { ModeToggle } from "@/components/ux/navbar/ModeToggle";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 
 export default function DashboardLayoutPage({
   children,

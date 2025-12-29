@@ -1,5 +1,4 @@
 import { TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import React from "react";
 
 export default function SpecialtiesTableHeader() {
   return (

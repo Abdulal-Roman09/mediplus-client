@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import {
   Sidebar,
   SidebarContent,
@@ -14,6 +13,7 @@ import {
   SidebarSeparator,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
+import { useState, useEffect } from "react";
 import Logo from "../../../components/logo";
 import { usePathname } from "next/navigation";
 import { drawerItems } from "@/utils/drawerItems";
@@ -27,10 +27,10 @@ export function AppSidebar() {
   useEffect(() => {
     const info = getUserInfo();
     setRole(info?.role || "");
-    setMounted(true); // only render after client mount
+    setMounted(true); 
   }, []);
 
-  if (!mounted) return null; // skip server render
+  if (!mounted) return null; 
 
   const menuItems = drawerItems(role);
 

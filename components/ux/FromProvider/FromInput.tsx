@@ -1,13 +1,12 @@
-import * as React from "react";
 import {
   FormControl,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Controller, useFormContext } from "react-hook-form";
-import { cn } from "@/lib/utils";
 
 type FormInputProps = {
   name: string;

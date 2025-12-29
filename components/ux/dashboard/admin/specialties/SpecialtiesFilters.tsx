@@ -1,4 +1,3 @@
-import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -6,8 +5,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { SpecialtiesFiltersProps } from "@/types/adminSpecialtiesProps";
 import { Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { SpecialtiesFiltersProps } from "@/types/adminSpecialtiesProps";
 
 export function SpecialtiesFilters({
   searchTerm,

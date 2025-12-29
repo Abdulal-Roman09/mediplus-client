@@ -1,17 +1,17 @@
-import Modal from "@/components/ux/Model/Modal";
-import FormHendeler from "@/components/ux/FromProvider/FormHandler";
-import FormInput from "@/components/ux/FromProvider/FromInput";
-import FormFileUploader from "@/components/ux/FromProvider/FromFileuploader";
-import { Button } from "@/components/ui/button";
-import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { toast } from "sonner";
-import { modifyPayload } from "@/utils/modifyPayload";
-import { post } from "@/services/api/api";
-import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
+import { post } from "@/services/api/api";
+import { Button } from "@/components/ui/button";
+import Modal from "@/components/ux/Model/Modal";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { modifyPayload } from "@/utils/modifyPayload";
+import { useQueryClient } from "@tanstack/react-query";
+import FormInput from "@/components/ux/FromProvider/FromInput";
+import FormHendeler from "@/components/ux/FromProvider/FormHandler";
 import { specialtySchema } from "@/Validation/Admin/specialtySchema";
 import { CreateSpecialtyModalProps } from "@/types/adminSpecialtiesProps";
+import FormFileUploader from "@/components/ux/FromProvider/FromFileuploader";
 
 type FormData = z.infer<typeof specialtySchema>;
 

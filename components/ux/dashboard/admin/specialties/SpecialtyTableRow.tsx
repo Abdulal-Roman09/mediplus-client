@@ -1,6 +1,6 @@
-import { TableCell, TableRow } from "@/components/ui/table";
 import Image from "next/image";
 import { SpecialtyActions } from "./SpecialtyActions";
+import { TableCell, TableRow } from "@/components/ui/table";
 import { SpecialtyTableRowProps } from "@/types/adminSpecialtiesProps";
 
 export function SpecialtyTableRow({

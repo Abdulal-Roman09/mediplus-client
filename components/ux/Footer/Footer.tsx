@@ -1,14 +1,10 @@
-import Link from "next/link";
 import {
-  Facebook,
-  Twitter,
-  Instagram,
-  Linkedin,
   Mail,
   Phone,
   MapPin,
   Stethoscope,
 } from "lucide-react";
+import Link from "next/link";
 import { footerLinks } from "./FooterLinks";
 
 

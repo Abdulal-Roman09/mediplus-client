@@ -1,6 +1,6 @@
-import { Specialty } from "@/interface/spilaties";
 import Image from "next/image";
 import { toast } from "sonner";
+import { Specialty } from "@/interface/spilaties";
 
 export default async function Specialist() {
   let specialties: Specialty[] = [];

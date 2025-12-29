@@ -1,6 +1,6 @@
-import { TableRow, TableCell } from "@/components/ui/table";
 import { Loader2 } from "lucide-react";
 import { SpecialtyTableRow } from "./SpecialtyTableRow";
+import { TableRow, TableCell } from "@/components/ui/table";
 import { SpecialtiesTableProps } from "@/types/adminSpecialtiesProps";
 
 export function SpecialtiesTable({

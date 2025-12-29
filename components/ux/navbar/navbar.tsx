@@ -1,13 +1,13 @@
 "use client";
 
-import * as React from "react";
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
+import * as React from "react";
 import { cn } from "@/lib/utils";
-import { ModeToggle } from "./ModeToggle";
-import Logo from "../components/logo";
-import { navLinks } from "./navLink";
 import dynamic from "next/dynamic";
+import { navLinks } from "./navLink";
+import Logo from "../components/logo";
+import { Menu, X } from "lucide-react";
+import { ModeToggle } from "./ModeToggle";
 
 export function Navbar() {
   const AuthButton = dynamic(() => import("./AuthButton"), { ssr: false });
