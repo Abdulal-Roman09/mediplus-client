@@ -10,7 +10,7 @@ import { modifyPayload } from "@/utils/modifyPayload";
 import { post } from "@/services/api/api";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { specialtySchema } from "@/Validation/specialtySchema";
+import { specialtySchema } from "@/Validation/Admin/specialtySchema";
 import { CreateSpecialtyModalProps } from "@/types/adminSpecialtiesProps";
 
 type FormData = z.infer<typeof specialtySchema>;

@@ -9,9 +9,7 @@ export default function DoctorPage() {
 
   return (
     <div className="p-6">
-      <div className="flex justify-between items-center">
         <DoctorPageHader onOpenModal={setIsOpenModel} />
-      </div>
 
       {/* Model */}
       <CreateDoctorModel open={isOpenModel} onOpenChange={setIsOpenModel} />

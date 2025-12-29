@@ -1,28 +1,42 @@
-import { Plus } from "lucide-react";
+import z from "zod";
+import { toast } from "sonner";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import { post } from "@/services/api/api";
 import Modal from "@/components/ux/Model/Modal";
-import FormHendeler from "@/components/ux/FromProvider/FormHandler";
+import { Button } from "@/components/ui/button";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { modifyPayload } from "@/utils/modifyPayload";
+import { useQueryClient } from "@tanstack/react-query";
 import FormInput from "@/components/ux/FromProvider/FromInput";
 import FormSelect from "@/components/ux/FromProvider/FromSelect";
+import FormHendeler from "@/components/ux/FromProvider/FormHandler";
+import { CreateDoctorModalPropos } from "@/types/doctorCreationProps";
 import FormFileUploader from "@/components/ux/FromProvider/FromFileuploader";
+import { doctorValidationSchema } from "@/Validation/Admin/createDoctorSchema";
+
+type FormData = z.infer<typeof doctorValidationSchema>;
 
 export default function CreateDoctorModal({
   open,
   onOpenChange,
-}: {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-}) {
+}: CreateDoctorModalPropos) {
+  const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = useState(false);
-  // eslint-disable-next-line
-  const onSubmitDoctor = async (data: any) => {
+
+  const onSubmitDoctor = async (values: FormData) => {
     setIsLoading(true);
     try {
-      console.log("Submitting doctor data:", data);
+      const payload = modifyPayload(values);
+      await post("/user/create-doctor", payload, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      toast.success("Doctor created successfully.");
       onOpenChange(false);
-    } catch (error) {
-      console.error("Error creating doctor:", error);
+      queryClient.invalidateQueries({ queryKey: ["doctors"] });
+      // eslint-disable-next-line
+    } catch (error: any) {
+      toast.error(error?.message || "Failed to create Doctor.");
     } finally {
       setIsLoading(false);
     }
@@ -32,26 +46,26 @@ export default function CreateDoctorModal({
     <Modal open={open} onOpenChange={onOpenChange} title="Create New Doctor">
       <FormHendeler
         onSubmit={onSubmitDoctor}
+        resolver={zodResolver(doctorValidationSchema)}
         defaultValues={{
           password: "",
+          profilePhoto: undefined,
           doctor: {
             name: "",
             email: "",
             contactNumber: "",
             address: "",
             registrationNumber: "",
-            experience: "",
-            gender: "",
-            appointmentFee: "",
+            experience: 0,
+            gender: "MALE",
+            appointmentFee: 0,
             qualification: "",
             currentWorkingPlace: "",
             designation: "",
-            profilePhoto: "",
           },
         }}
       >
         <div className="space-y-6 max-h-[65vh] overflow-y-auto">
-          {/* Section 1: Personal Information */}
           <div className="rounded-lg border bg-card p-5 shadow-sm">
             <h3 className="mb-4 text-lg font-semibold text-foreground">
               Personal Information
@@ -60,7 +74,7 @@ export default function CreateDoctorModal({
               <FormInput
                 name="doctor.name"
                 label="Full Name"
-                placeholder="Enter doctor's full name"
+                placeholder="Full name"
                 required
               />
               <FormInput
@@ -81,23 +95,20 @@ export default function CreateDoctorModal({
                 name="doctor.gender"
                 label="Gender"
                 required
-                placeholder="Please select your gender"
                 options={[
                   { value: "MALE", label: "Male" },
                   { value: "FEMALE", label: "Female" },
                 ]}
               />
             </div>
-            <div className="mt-4">
+            <div className="mt-6">
               <FormFileUploader
                 name="profilePhoto"
                 label="Upload Doctor Picture"
-                placeholder="Click to upload photo"
               />
             </div>
           </div>
 
-          {/* Section 2: Contact & Address */}
           <div className="rounded-lg border bg-card p-5 shadow-sm">
             <h3 className="mb-4 text-lg font-semibold text-foreground">
               Contact & Address
@@ -106,19 +117,18 @@ export default function CreateDoctorModal({
               <FormInput
                 name="doctor.contactNumber"
                 label="Contact Number"
-                placeholder="+880 1XXX-XXXXXX"
+                placeholder="+880"
                 required
               />
               <FormInput
                 name="doctor.address"
                 label="Address"
-                placeholder="Enter full address"
+                placeholder="Full address"
                 required
               />
             </div>
           </div>
 
-          {/* Section 3: Professional Information */}
           <div className="rounded-lg border bg-card p-5 shadow-sm">
             <h3 className="mb-4 text-lg font-semibold text-foreground">
               Professional Information
@@ -127,59 +137,55 @@ export default function CreateDoctorModal({
               <FormInput
                 name="doctor.qualification"
                 label="Qualification"
-                placeholder="e.g., MBBS, FCPS"
+                placeholder="MBBS, FCPS"
                 required
               />
               <FormInput
                 name="doctor.designation"
                 label="Designation"
-                placeholder="e.g., Consultant, Professor"
+                placeholder="Consultant"
                 required
               />
               <FormInput
                 name="doctor.experience"
-                label="Years of Experience"
+                label="Experience"
                 type="number"
-                placeholder="e.g., 10"
                 required
               />
               <FormInput
                 name="doctor.registrationNumber"
-                label="RegistrationNumber"
-                placeholder="Enter your RegistrationNumber"
-                type="number"
+                label="Reg Number"
+                placeholder="12345"
                 required
               />
               <FormInput
                 name="doctor.currentWorkingPlace"
-                label="Current Working Place"
-                placeholder="e.g., Dhaka Medical College"
+                label="Working Place"
+                placeholder="Hospital Name"
                 required
               />
             </div>
           </div>
 
-          {/* Section 4: Appointment Fee Information */}
           <div className="rounded-lg border bg-card p-5 shadow-sm">
             <h3 className="mb-4 text-lg font-semibold text-foreground">
-              Appointment Fee Information
+              Appointment Fee
             </h3>
             <FormInput
               name="doctor.appointmentFee"
-              label="Appointment Fee"
-              placeholder="Enter appointment fee amount"
-              required
+              label="Fee"
               type="number"
-              className="w-full"
+              required
             />
           </div>
         </div>
-        {/* Action Buttons */}
-        <div className="flex items-center justify-end gap-3 mt-8">
+
+        <div className="flex items-center justify-end gap-3 mt-4">
           <Button
             variant="outline"
             type="button"
             onClick={() => onOpenChange(false)}
+            disabled={isLoading}
           >
             Cancel
           </Button>
@@ -188,8 +194,7 @@ export default function CreateDoctorModal({
               "Creating..."
             ) : (
               <>
-                <Plus className="mr-2 h-4 w-4" />
-                Create Doctor
+                <Plus className="mr-2 h-4 w-4" /> Create Doctor
               </>
             )}
           </Button>

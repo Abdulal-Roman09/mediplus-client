@@ -1,4 +1,4 @@
-import { Plus } from "lucide-react"; // Missing import added
+import { Plus } from "lucide-react"
 import { Button } from "@/components/ui/button";
 
 interface DoctorPageHeaderProps {
