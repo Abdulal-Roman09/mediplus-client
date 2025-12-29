@@ -2,10 +2,7 @@
 
 import {
   Table,
-  TableBody,
-  TableHeader,
-  TableHead,
-  TableRow,
+  TableBody
 } from "@/components/ui/table";
 
 import { toast } from "sonner";
@@ -17,6 +14,7 @@ import { SpecialtiesHeader } from "@/components/ux/dashboard/admin/specialties/S
 import { CreateSpecialtyModal } from "@/components/ux/dashboard/admin/specialties/CreateSpecialtyModal";
 import { SpecialtiesFilters } from "@/components/ux/dashboard/admin/specialties/SpecialtiesFilters";
 import { SpecialtiesTable } from "@/components/ux/dashboard/admin/specialties/SpecialtiesTable";
+import SpecialtiesTableHeader from "./SpecialtiesTableHeader";
 
 export default function SpecialtiesPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -66,15 +64,7 @@ export default function SpecialtiesPage() {
       />
       <div className="rounded-md border overflow-hidden">
         <Table>
-          <TableHeader className="bg-primary/80">
-            <TableRow>
-              <TableHead className="w-[100px] pl-6 text-white">Icon</TableHead>
-              <TableHead className="text-center text-white">
-                Specialty Name
-              </TableHead>
-              <TableHead className="text-right text-white">Action</TableHead>
-            </TableRow>
-          </TableHeader>
+          <SpecialtiesTableHeader />
           <TableBody>
             <SpecialtiesTable
               data={data}

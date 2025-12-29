@@ -31,11 +31,11 @@ export default function Modal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
 
-      <DialogContent className={cn("sm:max-w-[600px]", className)}>
+      <DialogContent className={cn("sm:max-w-[600px] ", className)}>
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold">{title}</DialogTitle>
         </DialogHeader>
-        <div className="mt-4">{children}</div>
+        <div className="mt-4 ">{children}</div>
       </DialogContent>
     </Dialog>
   );

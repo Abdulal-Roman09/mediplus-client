@@ -1,7 +1,9 @@
-import React from 'react'
+import DoctorPage from "@/components/ux/dashboard/admin/doctor/DoctorPage";
 
 export default function DoctorManage() {
   return (
-    <div>DoctorManage</div>
-  )
+    <div>
+      <DoctorPage />
+    </div>
+  );
 }

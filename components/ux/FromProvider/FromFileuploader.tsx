@@ -2,11 +2,13 @@ import { Upload } from "lucide-react";
 import { useFormContext, Controller } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
 type FormFileUploaderProps = {
   name: string;
   label?: string;
+  placeholder?: string;
   className?: string;
   accept?: string;
 };
@@ -14,6 +16,7 @@ type FormFileUploaderProps = {
 export default function FormFileUploader({
   name,
   label,
+  placeholder,
   className,
   accept,
 }: FormFileUploaderProps) {
@@ -27,15 +30,13 @@ export default function FormFileUploader({
         field: { onChange, value, ...field },
         fieldState: { error },
       }) => {
-        const fileName = value ? value.name : null;
+        const fileName = value instanceof File ? value.name : null;
 
         return (
-          <div
-            className={cn(
-              "grid w-full max-w-sm items-center gap-1.5",
-              className
-            )}
-          >
+          <div className={cn("grid w-full items-center gap-2", className)}>
+            {/* Label placed above the button */}
+            {label && <Label htmlFor={name}>{label}</Label>}
+
             <Button
               variant="outline"
               asChild
@@ -47,9 +48,8 @@ export default function FormFileUploader({
               >
                 <Upload className="mr-2 h-4 w-4 flex-shrink-0" />
                 <span className="truncate">
-                  {fileName ?? label ?? "Upload file"}
+                  {fileName ?? placeholder ?? "Upload file"}
                 </span>
-
                 <Input
                   {...field}
                   id={name}
@@ -64,6 +64,7 @@ export default function FormFileUploader({
               </label>
             </Button>
 
+            {/* Error message handling */}
             {error && (
               <p className="text-sm text-destructive">{error.message}</p>
             )}

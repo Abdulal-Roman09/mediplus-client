@@ -26,7 +26,6 @@ export function AppSidebar() {
 
   useEffect(() => {
     const info = getUserInfo();
-    console.log(info)
     setRole(info?.role || "");
     setMounted(true); // only render after client mount
   }, []);
