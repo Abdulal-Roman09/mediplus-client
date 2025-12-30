@@ -4,7 +4,14 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { get } from "@/services/api/api";
 import { Doctor, DoctorsApiResponse } from "@/interface/doctor";
-import { ArrowUpDown, IdCardIcon, Mail, Phone, User } from "lucide-react";
+import {
+  ArrowUpDown,
+  IdCardIcon,
+  Mail,
+  Phone,
+  SearchIcon,
+  User,
+} from "lucide-react";
 
 import {
   Table,
@@ -17,47 +24,58 @@ import {
 } from "@/components/ui/table";
 
 import {
-  createColumnHelper,
+  ColumnDef,
+  SortingState,
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
+  getFilteredRowModel,
+  getFacetedRowModel,
   useReactTable,
-  SortingState,
 } from "@tanstack/react-table";
+
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
 
 import CreateDoctorModel from "./CreateDoctorModel";
 import DoctorPageHader from "./DoctorPageHader";
+import { Button } from "@/components/ui/button";
 
-const columnHelper = createColumnHelper<Doctor>();
-
-const columns = [
-  columnHelper.accessor("id", {
+const columns: ColumnDef<Doctor>[] = [
+  {
+    accessorKey: "id",
     header: "ID",
-    enableSorting: true,
-    cell: (info) => info.getValue(),
-  }),
-  columnHelper.accessor("name", {
+    cell: ({ getValue }) => getValue(),
+  },
+  {
+    accessorKey: "name",
     header: "Name",
-    enableSorting: true,
-    cell: (info) => info.getValue(),
-  }),
-  columnHelper.accessor("email", {
+    cell: ({ getValue }) => getValue(),
+  },
+  {
+    accessorKey: "email",
     header: "Email",
-    enableSorting: true,
-    cell: (info) => (
-      <div className="font-medium text-primary italic">{info.getValue()}</div>
+    cell: ({ getValue }) => (
+      <div className="font-medium text-primary italic">
+        {getValue<string>()}
+      </div>
     ),
-  }),
-  columnHelper.accessor("contactNumber", {
+  },
+  {
+    accessorKey: "contactNumber",
     header: "Contact Number",
-    enableSorting: true,
-    cell: (info) => info.getValue(),
-  }),
+    cell: ({ getValue }) => getValue(),
+  },
 ];
 
 export default function DoctorPage() {
   const [isOpenModel, setIsOpenModel] = useState(false);
+  const [searchInput, setSearchInput] = useState("");
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [globalFilter, setGlobalFilter] = useState("");
 
   const { data: res, isLoading } = useQuery<DoctorsApiResponse>({
     queryKey: ["doctors"],
@@ -71,18 +89,51 @@ export default function DoctorPage() {
     columns,
     state: {
       sorting,
+      globalFilter,
     },
     onSortingChange: setSorting,
+    onGlobalFilterChange: setGlobalFilter,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getFacetedRowModel: getFacetedRowModel(),
   });
+
+  const handleSearch = () => {
+    setGlobalFilter(searchInput);
+  };
 
   return (
     <div className="p-6 space-y-6">
       <DoctorPageHader onOpenModal={() => setIsOpenModel(true)} />
       <CreateDoctorModel open={isOpenModel} onOpenChange={setIsOpenModel} />
 
-      {/* Table */}
+      <div className="flex items-center gap-4">
+        <InputGroup className="max-w-sm">
+          <InputGroupInput
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleSearch();
+              }
+            }}
+            placeholder="Search all columns..."
+            type="search"
+          />
+          <InputGroupAddon>
+            <SearchIcon
+              onClick={handleSearch}
+              className="size-4 cursor-pointer"
+            />
+          </InputGroupAddon>
+        </InputGroup>
+
+        <Button onClick={handleSearch}>
+          <SearchIcon className="size-4" />
+        </Button>
+      </div>
+
       <div className="overflow-x-auto rounded-lg border">
         <Table>
           <TableCaption className="text-left pb-4">
@@ -101,11 +152,14 @@ export default function DoctorPage() {
                 {headerGroup.headers.map((header) => (
                   <TableHead
                     key={header.id}
-                    className="cursor-pointer select-none"
+                    className={
+                      header.column.getCanSort()
+                        ? "cursor-pointer select-none"
+                        : ""
+                    }
                     onClick={header.column.getToggleSortingHandler()}
                   >
                     <div className="flex items-center gap-2">
-                      {/* Custom icon + header text */}
                       {header.column.id === "id" && (
                         <IdCardIcon className="size-4" />
                       )}
@@ -124,12 +178,18 @@ export default function DoctorPage() {
                         header.getContext()
                       )}
 
-                      {/* Sorting indicator */}
-                      {{
-                        asc: <ArrowUpDown className="size-4 rotate-180" />,
-                        desc: <ArrowUpDown className="size-4" />,
-                      }[header.column.getIsSorted() as string] ?? (
-                        <ArrowUpDown className="size-4 opacity-40" />
+                      {header.column.getCanSort() && (
+                        <>
+                          {header.column.getIsSorted() === "asc" && (
+                            <ArrowUpDown className="size-4 rotate-180" />
+                          )}
+                          {header.column.getIsSorted() === "desc" && (
+                            <ArrowUpDown className="size-4" />
+                          )}
+                          {!header.column.getIsSorted() && (
+                            <ArrowUpDown className="size-4 opacity-40" />
+                          )}
+                        </>
                       )}
                     </div>
                   </TableHead>
@@ -145,7 +205,7 @@ export default function DoctorPage() {
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  Loading...
+                  Loading doctors...
                 </TableCell>
               </TableRow>
             ) : table.getRowModel().rows.length === 0 ? (
@@ -154,7 +214,7 @@ export default function DoctorPage() {
                   colSpan={columns.length}
                   className="h-24 text-center text-muted-foreground"
                 >
-                  No doctors available.
+                  No doctors found.
                 </TableCell>
               </TableRow>
             ) : (
