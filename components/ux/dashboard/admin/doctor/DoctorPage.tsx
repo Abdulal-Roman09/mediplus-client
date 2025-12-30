@@ -57,7 +57,6 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { get } from "@/services/api/api";
 import { Doctor } from "@/interface/doctor";
-import { Button } from "@/components/ui/button";
 
 interface DoctorsApiResponse {
   success: boolean;
@@ -74,6 +73,26 @@ const columns: ColumnDef<Doctor>[] = [
   {
     accessorKey: "id",
     header: "ID",
+  },
+  {
+    accessorKey: "gender",
+    header: "Gender",
+    cell: ({ getValue }) => {
+      const gender = getValue<"MALE" | "FEMALE">();
+      return (
+        <span
+          className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
+            gender === "FEMALE"
+              ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
+              : gender === "MALE"
+              ? "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400"
+              : "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400"
+          }`}
+        >
+          {gender || "Unknown"}
+        </span>
+      );
+    },
   },
   {
     accessorKey: "name",
