@@ -1,9 +1,10 @@
 "use client";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from "@/components/ui/input-group";
+
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { get } from "@/services/api/api";
+import { Doctor, DoctorsApiResponse } from "@/interface/doctor";
+import { ArrowUpDown, IdCardIcon, Mail, Phone, User } from "lucide-react";
 
 import {
   Table,
@@ -16,108 +17,51 @@ import {
 } from "@/components/ui/table";
 
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
-import { useState } from "react";
-import CreateDoctorModel from "./CreateDoctorModel";
-import DoctorPageHader from "./DoctorPageHader";
-import { useQuery } from "@tanstack/react-query";
-import { get } from "@/services/api/api";
-import { Doctor, DoctorsApiResponse } from "@/interface/doctor";
-import {
-  IdCardIcon,
-  Mail,
-  Phone,
-  Search as SearchIcon,
-  User,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import {
   createColumnHelper,
   flexRender,
   getCoreRowModel,
+  getSortedRowModel,
   useReactTable,
+  SortingState,
 } from "@tanstack/react-table";
+
+import CreateDoctorModel from "./CreateDoctorModel";
+import DoctorPageHader from "./DoctorPageHader";
 
 const columnHelper = createColumnHelper<Doctor>();
 
 const columns = [
   columnHelper.accessor("id", {
-    header: () => (
-      <div className="flex items-center">
-        <IdCardIcon className="mr-2 size-4" />
-        ID
-      </div>
-    ),
+    header: "ID",
+    enableSorting: true,
     cell: (info) => info.getValue(),
   }),
   columnHelper.accessor("name", {
-    header: () => (
-      <div className="flex items-center">
-        <User className="mr-2 size-4" />
-        Name
-      </div>
-    ),
+    header: "Name",
+    enableSorting: true,
     cell: (info) => info.getValue(),
   }),
   columnHelper.accessor("email", {
-    header: () => (
-      <div className="flex items-center">
-        <Mail className="mr-2 size-4" />
-        Email
-      </div>
-    ),
+    header: "Email",
+    enableSorting: true,
     cell: (info) => (
-      <div className="text-primary italic font-medium">{info.getValue()}</div>
+      <div className="font-medium text-primary italic">{info.getValue()}</div>
     ),
   }),
   columnHelper.accessor("contactNumber", {
-    header: () => (
-      <div className="flex items-center">
-        <Phone className="mr-2 size-4" />
-        Contact Number
-      </div>
-    ),
+    header: "Contact Number",
+    enableSorting: true,
     cell: (info) => info.getValue(),
   }),
 ];
 
 export default function DoctorPage() {
   const [isOpenModel, setIsOpenModel] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [search, setSearch] = useState("");
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
-  const [sortBy, setSortBy] = useState("createdAt");
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
-  const [genderFilter, setGenderFilter] = useState<"MALE" | "FEMALE" | "All">(
-    "All"
-  );
+  const [sorting, setSorting] = useState<SortingState>([]);
 
   const { data: res, isLoading } = useQuery<DoctorsApiResponse>({
-    queryKey: [
-      "doctors",
-      { page, limit, search, genderFilter, sortBy, sortOrder },
-    ],
-    queryFn: async () => {
-      const params: Record<string, string> = {
-        page: page.toString(),
-        limit: limit.toString(),
-        sortBy,
-        sortOrder,
-      };
-
-      if (search.trim()) params.searchTerm = search.trim();
-      if (genderFilter !== "All") params.gender = genderFilter;
-
-      const queryString = new URLSearchParams(params).toString();
-      return (await get(`/doctor?${queryString}`)) as DoctorsApiResponse;
-    },
+    queryKey: ["doctors"],
+    queryFn: () => get("/doctor"),
   });
 
   const doctors: Doctor[] = res?.data || [];
@@ -125,86 +69,22 @@ export default function DoctorPage() {
   const table = useReactTable({
     data: doctors,
     columns,
+    state: {
+      sorting,
+    },
+    onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
   });
 
-  const handleSearch = () => {
-    setSearch(searchTerm);
-    setPage(1);
-  };
-
   return (
-    <div className="p-6">
+    <div className="p-6 space-y-6">
       <DoctorPageHader onOpenModal={() => setIsOpenModel(true)} />
       <CreateDoctorModel open={isOpenModel} onOpenChange={setIsOpenModel} />
-
-      <div className="flex flex-col md:flex-row gap-4 my-6 items-end">
-        {/* Search Input */}
-        <div className="flex gap-2">
-          <InputGroup>
-            <InputGroupInput
-              placeholder="Doctor Name Enter Here..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-            />
-            <InputGroupAddon>
-              <SearchIcon size={18} />
-            </InputGroupAddon>
-          </InputGroup>
-          <Button onClick={handleSearch}>Search</Button>
-        </div>
-
-        {/* Sort by Date */}
-        <div className="flex flex-col gap-1">
-          <label className="text-xs font-medium text-gray-500">
-            Sort by Date
-          </label>
-          <Select
-            value={sortOrder}
-            onValueChange={(value: "asc" | "desc") => {
-              setSortOrder(value);
-              setPage(1);
-            }}
-          >
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Sort Order" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="asc">Oldest First</SelectItem>
-              <SelectItem value="desc">Newest First</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* Filter by Gender */}
-        <div className="flex flex-col gap-1">
-          <label className="text-xs font-medium text-gray-500">
-            Filter by Gender
-          </label>
-          <Select
-            value={genderFilter}
-            onValueChange={(value: any) => {
-              setGenderFilter(value);
-              setPage(1);
-            }}
-          >
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="All Genders" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="All">All</SelectItem>
-              <SelectItem value="MALE">Male</SelectItem>
-              <SelectItem value="FEMALE">Female</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
 
       {/* Table */}
       <div className="overflow-x-auto rounded-lg border">
         <Table>
-          {/* Optional caption */}
           <TableCaption className="text-left pb-4">
             {isLoading
               ? "Loading doctors..."
@@ -219,13 +99,39 @@ export default function DoctorPage() {
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                  <TableHead
+                    key={header.id}
+                    className="cursor-pointer select-none"
+                    onClick={header.column.getToggleSortingHandler()}
+                  >
+                    <div className="flex items-center gap-2">
+                      {/* Custom icon + header text */}
+                      {header.column.id === "id" && (
+                        <IdCardIcon className="size-4" />
+                      )}
+                      {header.column.id === "name" && (
+                        <User className="size-4" />
+                      )}
+                      {header.column.id === "email" && (
+                        <Mail className="size-4" />
+                      )}
+                      {header.column.id === "contactNumber" && (
+                        <Phone className="size-4" />
+                      )}
+
+                      {flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+
+                      {/* Sorting indicator */}
+                      {{
+                        asc: <ArrowUpDown className="size-4 rotate-180" />,
+                        desc: <ArrowUpDown className="size-4" />,
+                      }[header.column.getIsSorted() as string] ?? (
+                        <ArrowUpDown className="size-4 opacity-40" />
+                      )}
+                    </div>
                   </TableHead>
                 ))}
               </TableRow>
@@ -248,7 +154,7 @@ export default function DoctorPage() {
                   colSpan={columns.length}
                   className="h-24 text-center text-muted-foreground"
                 >
-                  No doctors found matching your filters.
+                  No doctors available.
                 </TableCell>
               </TableRow>
             ) : (
@@ -268,8 +174,6 @@ export default function DoctorPage() {
           </TableBody>
         </Table>
       </div>
-
-      {/* Optional: Pagination controls can be added here later */}
     </div>
   );
 }
