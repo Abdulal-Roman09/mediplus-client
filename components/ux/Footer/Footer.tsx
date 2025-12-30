@@ -3,11 +3,13 @@ import {
   Phone,
   MapPin,
   Stethoscope,
+  Facebook,
+  Twitter,
+  InstagramIcon,
+  LinkedinIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { footerLinks } from "./FooterLinks";
-
-
 
 export function Footer() {
   return (
@@ -28,28 +30,36 @@ export function Footer() {
             </p>
             <div className="flex space-x-4">
               <Link
-                href="#"
+                href="https://www.facebook.com"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-gray-400 hover:text-white transition-colors"
               >
                 <Facebook className="h-5 w-5" />
               </Link>
               <Link
-                href="#"
+                href="https://www.twitter.com"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-gray-400 hover:text-white transition-colors"
               >
                 <Twitter className="h-5 w-5" />
               </Link>
               <Link
-                href="#"
+                href="https://www.instagram.com"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-gray-400 hover:text-white transition-colors"
               >
-                <Instagram className="h-5 w-5" />
+                <InstagramIcon className="h-5 w-5" />
               </Link>
               <Link
-                href="#"
+                href="https://www.linkedin.com"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-gray-400 hover:text-white transition-colors"
               >
-                <Linkedin className="h-5 w-5" />
+                <LinkedinIcon className="h-5 w-5" />
               </Link>
             </div>
           </div>
