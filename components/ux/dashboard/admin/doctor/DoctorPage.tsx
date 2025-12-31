@@ -8,6 +8,7 @@ import {
   getSortedRowModel,
   getFilteredRowModel,
   useReactTable,
+  VisibilityState,
 } from "@tanstack/react-table";
 
 import {
@@ -74,6 +75,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import CreateDoctorModel from "./CreateDoctorModel";
 import { Doctor, DoctorsApiResponse } from "@/interface/doctor";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { DropdownMenuCheckboxItem } from "@radix-ui/react-dropdown-menu";
 
 export default function DoctorPage() {
   const queryClient = useQueryClient();
@@ -83,6 +85,8 @@ export default function DoctorPage() {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [rowSelection, setRowSelection] = React.useState({});
+  const [columnVisibility, setColumnVisibility] =
+    React.useState<VisibilityState>({});
 
   const { data: res, isLoading } = useQuery<DoctorsApiResponse>({
     queryKey: ["doctors", page, limit],
@@ -272,6 +276,7 @@ export default function DoctorPage() {
       sorting,
       globalFilter,
       rowSelection,
+      columnVisibility,
     },
     onSortingChange: setSorting,
     onGlobalFilterChange: setGlobalFilter,
@@ -280,6 +285,7 @@ export default function DoctorPage() {
     getFilteredRowModel: getFilteredRowModel(),
     manualPagination: true,
     onRowSelectionChange: setRowSelection,
+    onColumnVisibilityChange: setColumnVisibility,
   });
 
   return (
@@ -287,19 +293,55 @@ export default function DoctorPage() {
       <DoctorPageHader onOpenModal={() => setIsOpenModel(true)} />
       <CreateDoctorModel open={isOpenModel} onOpenChange={setIsOpenModel} />
 
-      {/* Search */}
-      <div className="flex items-center gap-4">
-        <InputGroup className="max-w-sm">
-          <InputGroupInput
-            value={globalFilter ?? ""}
-            onChange={(e) => setGlobalFilter(e.target.value)}
-            placeholder="Search all columns..."
-            type="search"
-          />
-          <InputGroupAddon>
-            <SearchIcon className="size-4" />
-          </InputGroupAddon>
-        </InputGroup>
+      <div className="flex justify-between">
+        <div>
+          {/* Search */}
+          <div className="flex items-center gap-4">
+            <InputGroup className="max-w-sm">
+              <InputGroupInput
+                value={globalFilter ?? ""}
+                onChange={(e) => setGlobalFilter(e.target.value)}
+                placeholder="Search all columns..."
+                type="search"
+              />
+              <InputGroupAddon>
+                <SearchIcon className="size-4" />
+              </InputGroupAddon>
+            </InputGroup>
+          </div>
+        </div>
+        <div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="ml-auto">
+                Columns
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              className="w-60 px-6 py-4 bg-white rounded-xl shadow-lg border border-gray-100"
+              align="end"
+            >
+              {table
+                .getAllColumns()
+                .filter((column) => column.getCanHide())
+                .map((column) => {
+                  return (
+                    <DropdownMenuCheckboxItem
+                      key={column.id}
+                      className="capitalize"
+                      checked={column.getIsVisible()}
+                      onCheckedChange={(value) =>
+                        column.toggleVisibility(!!value)
+                      }
+                    >
+                      {column.id}
+                      <DropdownMenuSeparator />
+                    </DropdownMenuCheckboxItem>
+                  );
+                })}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
 
       {/* Table */}
