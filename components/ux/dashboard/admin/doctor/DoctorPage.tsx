@@ -1,29 +1,4 @@
 "use client";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
-import {
-  ArrowUpDown,
-  IdCardIcon,
-  Mail,
-  Phone,
-  SearchIcon,
-  User,
-} from "lucide-react";
-
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 
 import {
   ColumnDef,
@@ -36,10 +11,30 @@ import {
 } from "@tanstack/react-table";
 
 import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from "@/components/ui/input-group";
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 import {
   Pagination,
@@ -51,74 +46,43 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
-import CreateDoctorModel from "./CreateDoctorModel";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
+
+import {
+  ArrowBigUpDashIcon,
+  ArrowUpDown,
+  Copy,
+  Mail,
+  MoreHorizontal,
+  Phone,
+  SearchIcon,
+  Trash,
+  User,
+  IdCardIcon,
+} from "lucide-react";
+
+import { toast } from "sonner";
+import React, { useState } from "react";
+import { del, get } from "@/services/api/api";
+import { Button } from "@/components/ui/button";
 import DoctorPageHader from "./DoctorPageHader";
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { get } from "@/services/api/api";
-import { Doctor } from "@/interface/doctor";
-
-interface DoctorsApiResponse {
-  success: boolean;
-  message: string;
-  meta: {
-    total: number;
-    page: number;
-    limit: number;
-  };
-  data: Doctor[];
-}
-
-const columns: ColumnDef<Doctor>[] = [
-  {
-    accessorKey: "id",
-    header: "ID",
-  },
-  {
-    accessorKey: "gender",
-    header: "Gender",
-    cell: ({ getValue }) => {
-      const gender = getValue<"MALE" | "FEMALE">();
-      return (
-        <span
-          className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
-            gender === "FEMALE"
-              ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
-              : gender === "MALE"
-              ? "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400"
-              : "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400"
-          }`}
-        >
-          {gender || "Unknown"}
-        </span>
-      );
-    },
-  },
-  {
-    accessorKey: "name",
-    header: "Name",
-  },
-  {
-    accessorKey: "email",
-    header: "Email",
-    cell: ({ getValue }) => (
-      <div className="font-medium text-primary italic">
-        {getValue<string>()}
-      </div>
-    ),
-  },
-  {
-    accessorKey: "contactNumber",
-    header: "Contact Number",
-  },
-];
+import { Checkbox } from "@/components/ui/checkbox";
+import CreateDoctorModel from "./CreateDoctorModel";
+import { Doctor, DoctorsApiResponse } from "@/interface/doctor";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 export default function DoctorPage() {
+  const queryClient = useQueryClient();
   const [isOpenModel, setIsOpenModel] = useState(false);
   const [globalFilter, setGlobalFilter] = useState("");
   const [sorting, setSorting] = useState<SortingState>([]);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
+  const [rowSelection, setRowSelection] = React.useState({});
 
   const { data: res, isLoading } = useQuery<DoctorsApiResponse>({
     queryKey: ["doctors", page, limit],
@@ -138,20 +102,15 @@ export default function DoctorPage() {
   const serverLimit = res?.meta.limit || 10;
   const totalPages = total > 0 ? Math.ceil(total / serverLimit) : 1;
 
-  const table = useReactTable({
-    data: doctors,
-    columns,
-    state: {
-      sorting,
-      globalFilter,
-    },
-    onSortingChange: setSorting,
-    onGlobalFilterChange: setGlobalFilter,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    manualPagination: true,
-  });
+  const handleDelete = async (id: string) => {
+    try {
+      await del(`/doctor/${id}`);
+      queryClient.invalidateQueries({ queryKey: ["doctors"] });
+      toast.success("Doctor deleted successfully", { position: "top-center" });
+    } catch (err) {
+      toast.error("Doctor deletion failed", { position: "top-center" });
+    }
+  };
 
   const handleLimitChange = (value: string) => {
     setLimit(Number(value));
@@ -181,12 +140,154 @@ export default function DoctorPage() {
   const startEntry = total === 0 ? 0 : (serverPage - 1) * serverLimit + 1;
   const endEntry = Math.min(serverPage * serverLimit, total);
 
+  const columns: ColumnDef<Doctor>[] = [
+    {
+      id: "select",
+      header: ({ table }) => (
+        <Checkbox
+          checked={
+            table.getIsAllPageRowsSelected() ||
+            (table.getIsSomePageRowsSelected() && "indeterminate")
+          }
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all"
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label="Select row"
+        />
+      ),
+    },
+    {
+      accessorKey: "id",
+      header: "ID",
+    },
+    {
+      accessorKey: "gender",
+      header: "Gender",
+      cell: ({ getValue }) => {
+        const gender = getValue<"MALE" | "FEMALE">();
+        return (
+          <span
+            className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
+              gender === "FEMALE"
+                ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
+                : gender === "MALE"
+                ? "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400"
+                : "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400"
+            }`}
+          >
+            {gender || "Unknown"}
+          </span>
+        );
+      },
+    },
+    {
+      accessorKey: "name",
+      header: "Name",
+    },
+    {
+      accessorKey: "email",
+      header: "Email",
+      cell: ({ getValue }) => (
+        <div className="font-medium text-primary italic">
+          {getValue<string>()}
+        </div>
+      ),
+    },
+    {
+      accessorKey: "contactNumber",
+      header: "Contact Number",
+    },
+    {
+      id: "actions",
+      enableHiding: false,
+      cell: ({ row }) => {
+        const doctor = row.original;
+
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+
+            <DropdownMenuContent
+              align="end"
+              className="w-60 p-2 bg-white rounded-xl shadow-lg border border-gray-100"
+            >
+              <DropdownMenuLabel className="px-2 py-1.5 text-sm font-semibold">
+                Actions
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator className="my-1 h-px bg-slate-200" />
+
+              <DropdownMenuItem
+                className="flex cursor-pointer items-center rounded-md px-2 py-2 text-sm outline-none transition-colors focus:bg-slate-100"
+                onClick={() => navigator.clipboard.writeText(doctor.id)}
+              >
+                <Copy className="mr-2 h-4 w-4" />
+                <span>Copy ID</span>
+              </DropdownMenuItem>
+
+              <DropdownMenuSeparator className="my-1 h-px bg-slate-200" />
+
+              <DropdownMenuItem className="flex cursor-pointer items-center rounded-md px-2 py-2 text-sm outline-none transition-colors focus:bg-slate-100">
+                <User className="mr-2 h-4 w-4" />
+                <span>View doctor</span>
+              </DropdownMenuItem>
+
+              <DropdownMenuSeparator className="my-1 h-px bg-slate-200" />
+
+              <DropdownMenuItem className="flex cursor-pointer items-center rounded-md px-2 py-2 text-sm outline-none transition-colors focus:bg-slate-100">
+                <ArrowBigUpDashIcon className="mr-2 h-4 w-4" />
+                <span>Update</span>
+              </DropdownMenuItem>
+
+              <DropdownMenuSeparator className="my-1 h-px bg-slate-200" />
+
+              <DropdownMenuItem
+                onSelect={(e) => e.preventDefault()}
+                onClick={() => handleDelete(doctor.id)}
+                className="flex cursor-pointer items-center rounded-md px-2 py-2 text-sm font-medium text-red-600 outline-none transition-colors focus:bg-red-50 focus:text-red-700"
+              >
+                <Trash className="mr-2 h-4 w-4" />
+                <span>Delete</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      },
+    },
+  ];
+
+  const table = useReactTable({
+    data: doctors,
+    columns,
+    state: {
+      sorting,
+      globalFilter,
+      rowSelection,
+    },
+    onSortingChange: setSorting,
+    onGlobalFilterChange: setGlobalFilter,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    manualPagination: true,
+    onRowSelectionChange: setRowSelection,
+  });
+
   return (
-    <div className="p-6 space-y-6">
+    <div className="space-y-6">
       <DoctorPageHader onOpenModal={() => setIsOpenModel(true)} />
       <CreateDoctorModel open={isOpenModel} onOpenChange={setIsOpenModel} />
 
-      {/* Instant Search */}
+      {/* Search */}
       <div className="flex items-center gap-4">
         <InputGroup className="max-w-sm">
           <InputGroupInput
@@ -293,9 +394,8 @@ export default function DoctorPage() {
         </Table>
       </div>
 
-      {/* Pagination Controls */}
+      {/* Pagination */}
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-        {/* Select the Number of Pages */}
         <div className="flex items-center gap-2">
           <span className="text-sm text-muted-foreground">Rows per page</span>
           <Select value={limit.toString()} onValueChange={handleLimitChange}>
@@ -312,7 +412,6 @@ export default function DoctorPage() {
           </Select>
         </div>
 
-        {/* Pagination */}
         <div>
           <Pagination>
             <PaginationContent>
@@ -368,7 +467,6 @@ export default function DoctorPage() {
           </Pagination>
         </div>
 
-        {/* showing how many data are and how many showing */}
         <div className="text-sm text-muted-foreground">
           Showing {startEntry} to {endEntry} of {total} doctors
         </div>

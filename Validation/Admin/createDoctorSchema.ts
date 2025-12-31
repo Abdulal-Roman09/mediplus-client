@@ -8,7 +8,7 @@ export const doctorValidationSchema = z.object({
     email: z.string().email("Invalid email address"),
     contactNumber: z.string().min(1, "Contact number is required"),
     address: z.string().min(1, "Address is required"),
-    registrationNumber: z.string().min(1, "Registration is required"), // Prisma অনুযায়ী String
+    registrationNumber: z.string().min(1, "Registration is required"), 
     experience: z.coerce.number().min(0),
     gender: z.enum(["MALE", "FEMALE"]),
     appointmentFee: z.coerce.number().min(1),
