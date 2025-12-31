@@ -1,3 +1,3 @@
-export default function PatientPage() {
-  return <div>PatientPage</div>;
+export default function PatientProfilePage() {
+  return <div>Admin Profile Page</div>;
 }

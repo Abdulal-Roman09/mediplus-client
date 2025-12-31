@@ -101,7 +101,7 @@ export default function DoctorPage() {
   });
 
   const doctors: Doctor[] = res?.data || [];
-  const total = res?.meta.total || 0;
+  const total = res?.meta?.total || 0;
   const serverPage = res?.meta.page || 1;
   const serverLimit = res?.meta.limit || 10;
   const totalPages = total > 0 ? Math.ceil(total / serverLimit) : 1;
@@ -293,7 +293,7 @@ export default function DoctorPage() {
       <DoctorPageHader onOpenModal={() => setIsOpenModel(true)} />
       <CreateDoctorModel open={isOpenModel} onOpenChange={setIsOpenModel} />
 
-      <div className="flex justify-between">
+      <div className="flex justify-between gap-6">
         <div>
           {/* Search */}
           <div className="flex items-center gap-4">

@@ -12,7 +12,7 @@ import {
     History,
     Settings,
     Pill,
-    Syringe
+    User
 } from "lucide-react";
 
 
@@ -28,6 +28,11 @@ export const drawerItems = (role: UserRole): DrawerItems[] => {
                     icon: LayoutDashboard,
                 },
                 {
+                    title: "Profile",
+                    path: `${role}/profile`,
+                    icon: User,
+                },
+                {
                     title: "Manage Users",
                     path: `${role}/manage-users`,
                     icon: Users,
@@ -41,6 +46,11 @@ export const drawerItems = (role: UserRole): DrawerItems[] => {
                     title: "Dashboard",
                     path: `${role}`,
                     icon: LayoutDashboard,
+                },
+                {
+                    title: "Profile",
+                    path: `${role}/profile`,
+                    icon: User,
                 },
                 {
                     title: "Doctors",
@@ -78,6 +88,11 @@ export const drawerItems = (role: UserRole): DrawerItems[] => {
                     icon: LayoutDashboard,
                 },
                 {
+                    title: "Profile",
+                    path: `${role}/profile`,
+                    icon: User,
+                },
+                {
                     title: "My Appointments",
                     path: `${role}/appointments`,
                     icon: CalendarCheck,
@@ -111,6 +126,11 @@ export const drawerItems = (role: UserRole): DrawerItems[] => {
                     title: "Dashboard",
                     path: `${role}`,
                     icon: LayoutDashboard,
+                },
+                {
+                    title: "Profile",
+                    path: `${role}/profile`,
+                    icon: User,
                 },
                 {
                     title: "Book Appointment",
