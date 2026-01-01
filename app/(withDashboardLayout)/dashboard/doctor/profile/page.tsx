@@ -1,3 +1,9 @@
-export default function doctorProfilePage() {
-  return <div>Admin Profile Page</div>;
+import DoctorProfilePage from "@/components/ux/dashboard/doctor/profile/profilePage";
+
+export default function doctorProfileMainPage() {
+  return (
+    <div>
+      <DoctorProfilePage />
+    </div>
+  );
 }

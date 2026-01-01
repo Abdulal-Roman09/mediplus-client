@@ -18,18 +18,30 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useQuery } from "@tanstack/react-query";
 import { get } from "@/services/api/api";
 
+export interface IUser {
+  id: string;
+  name: string;
+  email: string;
+  role: "ADMIN" | "DOCTOR" | "PATIENT" | string;
+  profilePhoto: string;
+  contactNumber?: string;
+  status: "ACTIVE" | "INACTIVE";
+  needPasswordChange: boolean;
+  isDeleted: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export default function DashboardUserAvator() {
   const router = useRouter();
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading } = useQuery<IUser>({
     queryKey: ["me"],
     queryFn: async () => {
       const res = await get("/user/me");
-      console.log(res.data);
-      return res.data;
+      return res?.data as IUser;
     },
   });
-
   if (isLoading) return null;
 
   const {
