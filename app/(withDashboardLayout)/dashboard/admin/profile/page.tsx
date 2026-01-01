@@ -1,3 +1,9 @@
+import ProfilePage from "@/components/ux/dashboard/admin/profile/ProfilePage";
+
 export default function AdminProfilePage() {
-  return <div>Admin Profile Page</div>;
+  return (
+    <div>
+      <ProfilePage />
+    </div>
+  );
 }

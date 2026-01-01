@@ -61,7 +61,6 @@ export default function DashboardLayoutPage({
     );
   }
 
-  // Placeholder for unread notification count — replace with real data later
   const unreadNotifications = 3;
 
   return (

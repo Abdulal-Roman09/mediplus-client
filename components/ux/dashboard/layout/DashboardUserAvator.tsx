@@ -1,3 +1,5 @@
+"use client";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -6,86 +8,95 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import Link from "next/link";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { removeUser } from "@/services/auth.serivce";
 import { LogOut, Settings, User } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useQuery } from "@tanstack/react-query";
+import { get } from "@/services/api/api";
 
-interface DashboardUserAvatorProps {
-  user: {
-    name?: string;
-    email?: string;
-    role?: string;
-    avatar?: string;
-  } | null;
-}
-
-export default function DashboardUserAvator({
-  user,
-}: DashboardUserAvatorProps) {
+export default function DashboardUserAvator() {
   const router = useRouter();
-  const userName = user?.name || "User";
-  const userEmail = user?.email || "user@example.com";
-  const userRole = user?.role || "Member";
 
-  // Generate initials from name
-  const initials = userName
+  const { data, isLoading } = useQuery({
+    queryKey: ["me"],
+    queryFn: async () => {
+      const res = await get("/user/me");
+      console.log(res.data);
+      return res.data;
+    },
+  });
+
+  if (isLoading) return null;
+
+  const {
+    name = "User",
+    email = "user@example.com",
+    role = "Member",
+    profilePhoto,
+  } = data || {};
+
+  const initials = name
     .split(" ")
-    .map((n) => n[0])
+    .map((n: string) => n[0])
     .join("")
     .toUpperCase()
     .slice(0, 2);
-  const hendeleLogout = () => {
+
+  const handleLogout = () => {
     removeUser();
-    router.refresh();
-    toast.error("LogOut Successfully", {
+    toast.error("Logout Successfully", {
       position: "top-center",
       duration: 2500,
       icon: <LogOut size={16} />,
     });
     router.push("/");
+    router.refresh();
   };
+  const userRole = data?.role?.toLowerCase();
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+        <Button variant="ghost" className="h-8 w-8 rounded-full">
           <Avatar className="h-8 w-8">
-            <AvatarImage src={user?.avatar} alt={userName} />
+            <AvatarImage src={profilePhoto} alt={name} />
             <AvatarFallback>{initials}</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent className="w-56" align="end" forceMount>
+      <DropdownMenuContent className="w-56" align="end">
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">Hey, {userName}!</p>
-            <p className="text-xs leading-none text-muted-foreground">
-              {userEmail} • {userRole}
-            </p>
+            <p className="text-sm font-medium">Hey, {name}!</p>
+            <p className="text-sm text-muted-foreground">{email}</p>
+            <p className="text-green-500"> {role}</p>
           </div>
         </DropdownMenuLabel>
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem>
-          <User className="mr-2 h-4 w-4" />
-          <span>Profile</span>
+        <DropdownMenuItem asChild>
+          <Link href={`/dashboard/${userRole}/profile`} className="flex gap-4">
+            <User className="h-4 w-4" />
+            Profile
+          </Link>
         </DropdownMenuItem>
 
         <DropdownMenuItem>
-          <Settings className="mr-2 h-4 w-4" />
-          <span>Settings</span>
+          <Settings className="h-4 w-4 mr-2" />
+          Settings
         </DropdownMenuItem>
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem onClick={hendeleLogout} className="text-destructive">
-          <LogOut className="mr-2 h-4 w-4" />
-          <span>Log out</span>
+        <DropdownMenuItem onClick={handleLogout} className="text-destructive">
+          <LogOut className="h-4 w-4 mr-2" />
+          Log out
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
