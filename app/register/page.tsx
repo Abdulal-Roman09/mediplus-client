@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import Logo from "@/components/ux/components/logo";
+import Logo from "@/components/ux/sharedComponents/logo";
 import Link from "next/link";
 import { modifyPayload } from "@/utils/modifyPayload";
 import { registerPaient } from "@/services/actions/registerPatient";

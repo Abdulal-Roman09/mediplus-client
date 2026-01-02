@@ -5,7 +5,7 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 import dynamic from "next/dynamic";
 import { navLinks } from "./navLink";
-import Logo from "../components/logo";
+import Logo from "../sharedComponents/logo";
 import { Menu, X } from "lucide-react";
 import { ModeToggle } from "./ModeToggle";
 

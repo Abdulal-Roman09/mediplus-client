@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/sidebar";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import Logo from "../../../components/logo";
+import Logo from "../../../sharedComponents/logo";
 import { usePathname } from "next/navigation";
 import { drawerItems } from "@/utils/drawerItems";
 import { getUserInfo } from "@/services/auth.serivce";
@@ -27,10 +27,10 @@ export function AppSidebar() {
   useEffect(() => {
     const info = getUserInfo();
     setRole(info?.role || "");
-    setMounted(true); 
+    setMounted(true);
   }, []);
 
-  if (!mounted) return null; 
+  if (!mounted) return null;
 
   const menuItems = drawerItems(role);
 

@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card";
 import Link from "next/link";
 import { toast } from "sonner";
-import Logo from "@/components/ux/components/logo";
+import Logo from "@/components/ux/sharedComponents/logo";
 import { patientLogin } from "@/services/actions/loginPatient";
 import { useRouter } from "next/navigation";
 import { storeUserInfo } from "@/services/auth.serivce";
@@ -19,7 +19,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import FormHendeler from "@/components/ux/FromProvider/FormHandler";
 import FormInput from "@/components/ux/FromProvider/FromInput";
 import { LoginSchema } from "@/Validation/LoginValidation";
-
 
 export type LoginFormData = z.infer<typeof LoginSchema>;
 
