@@ -1,7 +1,7 @@
 "use client";
 
 import Modal from "@/components/ux/Model/Modal";
-import { get } from "@/services/api/api";
+import { get, patch } from "@/services/api/api";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { useState } from "react";
@@ -57,10 +57,12 @@ export default function ProfilePage() {
 
   const admin = adminData?.data;
 
-  if (!admin) return null;
+  if (!admin) return null;   
+  //   only photo update
+  //   patch(`/admin/${userId}`);
 
   return (
-    <div className="max-w-4xl mx-auto p-8 bg-card rounded-2xl shadow-lg">
+    <div className=" p-8  bg-card rounded-2xl shadow-lg">
       {/* Header: Photo + Name */}
       <div className="flex items-center gap-8 mb-10">
         <Modal
@@ -87,6 +89,7 @@ export default function ProfilePage() {
               height={300}
               className="rounded-2xl object-cover "
             />
+            {/* ai icons clike korle akta modal open hobe oi khaen file ta sen dkorbo */}
             <Button size={"lg"}>
               <Camera className="w-5 h-5" />
               Change Photo
@@ -110,10 +113,10 @@ export default function ProfilePage() {
       {/* Personal Information */}
       <div className="mb-10">
         <h2 className="text-2xl font-semibold text-foreground mb-6 flex items-center gap-3">
-          <User className="w-7 h-7 text-primary" />
+          <User className="w-7 h-7 " />
           Personal Information
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-muted p-6 rounded-xl">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6  p-6 rounded-xl">
           <InfoItem icon={User} label="Full Name" value={admin.name} />
           <InfoItem icon={Mail} label="Email Address" value={admin.email} />
           <InfoItem
@@ -135,7 +138,7 @@ export default function ProfilePage() {
           <Calendar className="w-7 h-7 text-primary" />
           Account Information
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-muted p-6 rounded-xl">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 rounded-xl">
           <InfoItem
             icon={Calendar}
             label="Created At"
