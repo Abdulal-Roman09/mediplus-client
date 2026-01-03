@@ -7,7 +7,7 @@ import dynamic from "next/dynamic";
 import { navLinks } from "./navLink";
 import { Menu, X } from "lucide-react";
 import { ModeToggle } from "./ModeToggle";
-import Logo from "../sharedComponents/logo";
+import Logo from "../../sharedComponents/logo";
 import { usePathname } from "next/navigation";
 
 export function Navbar() {
