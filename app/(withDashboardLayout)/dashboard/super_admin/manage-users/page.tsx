@@ -1,7 +1,10 @@
-import React from 'react'
+import ManageUserPage from "@/components/ux/dashboard/superAdmin/ManageUser/ManageUserPage";
+import React from "react";
 
-export default function ManageUsers() {
+export default function MangeUserMainPage() {
   return (
-    <div>ManageUsers</div>
-  )
+    <div>
+      <ManageUserPage />
+    </div>
+  );
 }
