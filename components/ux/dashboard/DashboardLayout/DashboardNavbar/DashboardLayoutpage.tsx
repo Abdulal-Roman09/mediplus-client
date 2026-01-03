@@ -5,16 +5,17 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+
 import { Bell } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { AppSidebar } from "./sidebar/app-sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
 import { getUserInfo } from "@/services/auth.serivce";
-import DashboardUserAvator from "./DashboardUserAvator";
+import { AppSidebar } from "../DashboardSidebar/app-sidebar";
 import { ModeToggle } from "@/components/ux/navbar/ModeToggle";
+import DashboardUserAvator from "./DashboardAvator/DashboardUserAvator";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 
 export default function DashboardLayoutPage({
@@ -22,7 +23,7 @@ export default function DashboardLayoutPage({
 }: {
   children: React.ReactNode;
 }) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line 
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
@@ -32,7 +33,7 @@ export default function DashboardLayoutPage({
     setLoading(false);
   }, []);
 
-  // Show skeleton UI while user data is loading (improves perceived performance)
+
   if (loading) {
     return (
       <SidebarProvider>
