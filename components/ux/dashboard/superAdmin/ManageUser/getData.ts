@@ -1,6 +1,6 @@
+import { IUser } from "./columns";
 import { get } from "@/services/api/api";
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
-import { IUser } from "./columns";
 
 export const useGetUsers = (): UseQueryResult<IUser[], Error> => {
   return useQuery({

@@ -1,7 +1,7 @@
 "use client";
 
 import Modal from "@/components/ux/Model/Modal";
-import { get, patch } from "@/services/api/api";
+import { get } from "@/services/api/api";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { useState } from "react";
@@ -22,6 +22,7 @@ function InfoItem({
   label,
   value,
 }: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   icon: any;
   label: string;
   value: string;

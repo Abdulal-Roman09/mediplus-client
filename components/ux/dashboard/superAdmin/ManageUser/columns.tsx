@@ -1,7 +1,4 @@
 "use client";
-
-import { ColumnDef } from "@tanstack/react-table";
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,6 +17,9 @@ import {
   Trash2,
   ArrowUpDown,
 } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@radix-ui/react-checkbox";
 
 export type IUser = {
