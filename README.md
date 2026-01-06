@@ -68,7 +68,7 @@ Ensure you have **Node.js** (v20.x or higher recommended) and **npm** installed.
 
    ```
 
-2.Navigate to the project director:
+   2.Navigate to the project director:
 
 ```bash
 cd mediplus-client
@@ -78,6 +78,7 @@ cd mediplus-client
 
 ```bash
 npm install
+
 ```
 
 (or yarn install if using Yarn Or pnpm Or bun)
