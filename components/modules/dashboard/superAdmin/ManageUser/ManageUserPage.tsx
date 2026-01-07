@@ -1,14 +1,15 @@
 "use client";
 
-import { columns } from "@/components/ux/dashboard/superAdmin/ManageUser/columns";
-import { useGetUsers } from "@/components/ux/dashboard/superAdmin/ManageUser/getData";
-import { DataTable } from "@/components/ux/dashboard/superAdmin/ManageUser/DataTable";
+import { columns } from "@/components/modules/dashboard/superAdmin/ManageUser/columns";
+import { useGetUsers } from "@/components/modules/dashboard/superAdmin/ManageUser/getData";
+import { DataTable } from "@/components/modules/dashboard/superAdmin/ManageUser/DataTable";
 
 export default function ManageUserPage() {
   const { data, isLoading, isError, error } = useGetUsers();
 
   if (isLoading) return <div className="p-10">Loading users...</div>;
-  if (isError) return <div className="p-10 text-red-500">Error: {error?.message}</div>;
+  if (isError)
+    return <div className="p-10 text-red-500">Error: {error?.message}</div>;
 
   return (
     <div className="container mx-auto py-10">

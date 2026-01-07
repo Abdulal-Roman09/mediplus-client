@@ -14,7 +14,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
 import { getUserInfo } from "@/services/auth.serivce";
 import { AppSidebar } from "../DashboardSidebar/app-sidebar";
-import { ModeToggle } from "@/components/ux/Home/navbar/ModeToggle";
+import { ModeToggle } from "@/components/modules/Home/navbar/ModeToggle";
 import DashboardUserAvator from "./DashboardAvator/DashboardUserAvator";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 

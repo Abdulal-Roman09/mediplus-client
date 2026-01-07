@@ -3,15 +3,15 @@ import { toast } from "sonner";
 import { useState } from "react";
 import { post } from "@/services/api/api";
 import { Button } from "@/components/ui/button";
-import Modal from "@/components/ux/Model/Modal";
+import Modal from "@/components/modules/Model/Modal";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { modifyPayload } from "@/utils/modifyPayload";
 import { useQueryClient } from "@tanstack/react-query";
-import FormInput from "@/components/ux/FromProvider/FromInput";
-import FormHendeler from "@/components/ux/FromProvider/FormHandler";
+import FormInput from "@/components/modules/FromProvider/FromInput";
+import FormHendeler from "@/components/modules/FromProvider/FormHandler";
 import { specialtySchema } from "@/Validation/Admin/specialtySchema";
 import { CreateSpecialtyModalProps } from "@/types/adminSpecialtiesProps";
-import FormFileUploader from "@/components/ux/FromProvider/FromFileuploader";
+import FormFileUploader from "@/components/modules/FromProvider/FromFileuploader";
 
 type FormData = z.infer<typeof specialtySchema>;
 

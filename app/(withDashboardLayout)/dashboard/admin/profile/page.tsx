@@ -1,4 +1,4 @@
-import ProfilePage from "@/components/ux/dashboard/admin/profile/ProfilePage";
+import ProfilePage from "@/components/modules/dashboard/admin/profile/ProfilePage";
 
 export default function AdminProfilePage() {
   return (

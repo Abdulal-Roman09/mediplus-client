@@ -1,4 +1,4 @@
-import SpecialtiesPage from "@/components/ux/dashboard/admin/specialties/SpecialtiesPage";
+import SpecialtiesPage from "@/components/modules/dashboard/admin/specialties/SpecialtiesPage";
 
 export default function SpecialtiesMainPage() {
   return (

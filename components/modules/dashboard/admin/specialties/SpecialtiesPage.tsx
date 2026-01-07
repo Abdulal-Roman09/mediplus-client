@@ -7,10 +7,10 @@ import { Specialty } from "@/interface/spilaties";
 import { Table, TableBody } from "@/components/ui/table";
 import SpecialtiesTableHeader from "./SpecialtiesTableHeader";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { SpecialtiesTable } from "@/components/ux/dashboard/admin/specialties/SpecialtiesTable";
-import { SpecialtiesHeader } from "@/components/ux/dashboard/admin/specialties/SpecialtiesHeader";
-import { SpecialtiesFilters } from "@/components/ux/dashboard/admin/specialties/SpecialtiesFilters";
-import { CreateSpecialtyModal } from "@/components/ux/dashboard/admin/specialties/CreateSpecialtyModal";
+import { SpecialtiesTable } from "@/components/modules/dashboard/admin/specialties/SpecialtiesTable";
+import { SpecialtiesHeader } from "@/components/modules/dashboard/admin/specialties/SpecialtiesHeader";
+import { SpecialtiesFilters } from "@/components/modules/dashboard/admin/specialties/SpecialtiesFilters";
+import { CreateSpecialtyModal } from "@/components/modules/dashboard/admin/specialties/CreateSpecialtyModal";
 
 export default function SpecialtiesPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);

@@ -1,4 +1,4 @@
-import ProfilePage from "@/components/ux/dashboard/superAdmin/profile/SuperAdminProfilePage";
+import ProfilePage from "@/components/modules/dashboard/superAdmin/profile/SuperAdminProfilePage";
 
 export default function SuperAdminProfilePage() {
   return (

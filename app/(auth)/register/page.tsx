@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import Logo from "@/components/ux/sharedComponents/logo";
+import Logo from "@/components/modules/sharedComponents/logo";
 import Link from "next/link";
 import { modifyPayload } from "@/utils/modifyPayload";
 import { registerPaient } from "@/services/actions/registerPatient";
@@ -19,8 +19,8 @@ import { storeUserInfo } from "@/services/auth.serivce";
 import { LogIn } from "lucide-react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import FormHendeler from "@/components/ux/FromProvider/FormHandler";
-import FormInput from "@/components/ux/FromProvider/FromInput";
+import FormHendeler from "@/components/modules/FromProvider/FormHandler";
+import FormInput from "@/components/modules/FromProvider/FromInput";
 import { RegisterSchema } from "@/Validation/RegisterValidation";
 
 export type RegisterFormData = z.infer<typeof RegisterSchema>;

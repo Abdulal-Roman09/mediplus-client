@@ -14,9 +14,9 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { MailCheck } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Logo from "@/components/ux/sharedComponents/logo";
-import FormInput from "@/components/ux/FromProvider/FromInput";
-import FormHendeler from "@/components/ux/FromProvider/FormHandler";
+import Logo from "@/components/modules/sharedComponents/logo";
+import FormInput from "@/components/modules/FromProvider/FromInput";
+import FormHendeler from "@/components/modules/FromProvider/FormHandler";
 import { ForgetPasswordSchema } from "@/Validation/forgetPasswordValidation";
 import { post } from "@/services/api/api";
 

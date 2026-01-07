@@ -1,4 +1,4 @@
-import HealthPlanPage from "@/components/ux/Home/health-plan/HealthPlanPage";
+import HealthPlanPage from "@/components/modules/Home/health-plan/HealthPlanPage";
 
 export default function HealthPlan() {
   return (

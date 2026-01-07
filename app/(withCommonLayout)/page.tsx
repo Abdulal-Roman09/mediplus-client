@@ -1,7 +1,7 @@
-import HeroSection from "@/components/ux/Home/HeroSection/HeroSection";
-import Spcialist from "@/components/ux/Home/Spcialist/Spcialist";
-import TopRatedDoctors from "@/components/ux/Home/TopRateedDoctor/TopRatedDoctor";
-import WhyChooseUs from "@/components/ux/Home/WhyChoiceUs/WhyChoiceUs";
+import HeroSection from "@/components/modules/Home/HeroSection/HeroSection";
+import Spcialist from "@/components/modules/Home/Spcialist/Spcialist";
+import TopRatedDoctors from "@/components/modules/Home/TopRateedDoctor/TopRatedDoctor";
+import WhyChooseUs from "@/components/modules/Home/WhyChoiceUs/WhyChoiceUs";
 
 export default function Home() {
   return (

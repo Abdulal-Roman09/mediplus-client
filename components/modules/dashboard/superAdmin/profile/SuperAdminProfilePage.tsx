@@ -1,6 +1,6 @@
 "use client";
 
-import Modal from "@/components/ux/Model/Modal";
+import Modal from "@/components/modules/Model/Modal";
 import { get } from "@/services/api/api";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";

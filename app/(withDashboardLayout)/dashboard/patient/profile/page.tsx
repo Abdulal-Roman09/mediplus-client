@@ -1,4 +1,4 @@
-import ProfilePage from "@/components/ux/dashboard/patient/profilePage";
+import ProfilePage from "@/components/modules/dashboard/patient/profilePage";
 import React from "react";
 
 export default function Profile() {
